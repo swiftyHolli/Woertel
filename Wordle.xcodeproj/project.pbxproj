@@ -15,6 +15,7 @@
 		30415B672AACC319009956DD /* WordleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30415B662AACC319009956DD /* WordleUITests.swift */; };
 		30415B692AACC319009956DD /* WordleUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30415B682AACC319009956DD /* WordleUITestsLaunchTests.swift */; };
 		30415B7A2AAD2D54009956DD /* german.txt in Resources */ = {isa = PBXBuildFile; fileRef = 30415B792AAD2D54009956DD /* german.txt */; };
+		30910D072AB25E1F00E380A8 /* WordleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30910D062AB25E1F00E380A8 /* WordleModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		30415B662AACC319009956DD /* WordleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordleUITests.swift; sourceTree = "<group>"; };
 		30415B682AACC319009956DD /* WordleUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordleUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		30415B792AAD2D54009956DD /* german.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = german.txt; sourceTree = "<group>"; };
+		30910D062AB25E1F00E380A8 /* WordleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordleModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 			children = (
 				30415B4B2AACC318009956DD /* WordleApp.swift */,
 				30415B4D2AACC318009956DD /* ContentView.swift */,
+				30910D062AB25E1F00E380A8 /* WordleModel.swift */,
 				30415B4F2AACC319009956DD /* Assets.xcassets */,
 				30415B792AAD2D54009956DD /* german.txt */,
 				30415B512AACC319009956DD /* Preview Content */,
@@ -263,6 +266,7 @@
 			files = (
 				30415B4E2AACC318009956DD /* ContentView.swift in Sources */,
 				30415B4C2AACC318009956DD /* WordleApp.swift in Sources */,
+				30910D072AB25E1F00E380A8 /* WordleModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
