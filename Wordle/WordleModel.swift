@@ -27,6 +27,7 @@ class WordleModel: ObservableObject {
 
     
     var myStrings = [String]()
+    var originalWord = ""
     
     struct Letter {
         var rightPlace = false
@@ -51,6 +52,7 @@ class WordleModel: ObservableObject {
     
     func newGame() {
         var myWord = myStrings.randomElement()
+        originalWord = myWord ?? ""
         cheat = false
         myWord = myWord?.uppercased()
         chosenWord.removeAll()
@@ -134,6 +136,12 @@ class WordleModel: ObservableObject {
         }
         
     }
+    
+    func deleteWord() {
+        myStrings.removeAll(where: {$0 == originalWord})
+        writaData()
+        newGame()
+    }
 
 
     func readData() {
@@ -141,6 +149,17 @@ class WordleModel: ObservableObject {
             do {
                 let data = try String(contentsOfFile: path, encoding: .ascii)
                 myStrings = data.components(separatedBy: .newlines)
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func writaData() {
+        var output = myStrings.map{$0}.joined(separator: "\n")
+        if let path = Bundle.main.path(forResource: "german", ofType: "txt") {
+            do {
+                try output.write(toFile: path, atomically: false, encoding: String.Encoding.utf8)
             } catch {
                 print(error)
             }

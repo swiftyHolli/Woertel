@@ -44,48 +44,65 @@ struct ContentView: View {
                     }
             }
             .padding()
+            .toolbar{toolBarContent(vm: vm)}
             .navigationTitle("Wordle")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        withAnimation{
-                            vm.checkRow()
-                        }
-                    } label: {
-                        Image(systemName: "checkmark.bubble")
-                            .font(.title)
-                            .fontWeight(.semibold)
-                    }
-                }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        withAnimation{
-                            vm.newGame()
-                        }
-                    } label: {
-                        Image(systemName: "restart.circle")
-                            .font(.title)
-                            .fontWeight(.semibold)
-                    }
-                }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        withAnimation{
-                            vm.cheat.toggle()
-                        }
-                    } label: {
-                        Image(systemName: "eye")
-                            .font(.title)
-                            .fontWeight(.semibold)
-                    }
-                }
-            }
         }
         .onAppear {
             focusedField = .location
         }
-
     }
+    
+    //MARK: - ToolBar
+    struct toolBarContent: ToolbarContent {
+        var vm: WordleModel
+        var body: some ToolbarContent {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    withAnimation{
+                        vm.checkRow()
+                    }
+                } label: {
+                    Image(systemName: "checkmark.bubble")
+                        .font(.title)
+                        .fontWeight(.semibold)
+                }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    withAnimation{
+                        vm.deleteWord()
+                    }
+                } label: {
+                    Image(systemName: "folder.badge.minus")
+                        .font(.title)
+                        .fontWeight(.semibold)
+                }
+            }
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    withAnimation{
+                        vm.newGame()
+                    }
+                } label: {
+                    Image(systemName: "restart.circle")
+                        .font(.title)
+                        .fontWeight(.semibold)
+                }
+            }
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    withAnimation{
+                        vm.cheat.toggle()
+                    }
+                } label: {
+                    Image(systemName: "eye")
+                        .font(.title)
+                        .fontWeight(.semibold)
+                }
+            }
+        }
+    }
+    
     
     struct LetterView: View {
         var letter: WordleModel.Letter
