@@ -422,7 +422,6 @@ Galle
 Gamer
 Gamma
 Garbe
-Garbo
 Garde
 Gasse
 Gassi
@@ -461,9 +460,7 @@ Gorki
 Gotik
 Gouda
 Gramm
-Grams
 Graph
-Grass
 Graus
 Greif
 Greis
