@@ -13,7 +13,8 @@ struct KeyboardLetter: View {
         Text(letter.character)
             .font(.title)
             .fontWeight(.semibold)
-            .frame(width: 35, height: 35, alignment: .center)
+            .foregroundColor(letter.rightLetter || letter.rightPlace || letter.wrong ? .white : .black)
+            .frame(width: UIScreen.main.bounds.width / 11, height: UIScreen.main.bounds.width / 11, alignment: .center)
             .aspectRatio(1, contentMode: .fill)
             .background {
                 ZStack {
@@ -23,13 +24,13 @@ struct KeyboardLetter: View {
                     }
                     else if letter.rightLetter {
                         RoundedRectangle(cornerRadius: 5)
-                            .fill(.yellow)
+                            .fill(.orange)
                     }
                     else if letter.rightPlace {
                         RoundedRectangle(cornerRadius: 5)
                             .fill(.green)
                     }
-
+                    
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(lineWidth: 1)
                         .foregroundColor(Color.black)
@@ -47,7 +48,7 @@ struct KeyBoard: View {
     var firstRow = ["Q","W","E","R","T","Z","U","I","O","P"]
     var secondRow = ["A","S","D","F","G","H","J","K","L"]
     var thirdRow = ["Y","X","C","V","B","N","M"]
-
+    
     var body: some View {
         VStack(spacing: 2) {
             HStack(spacing: 2) {
@@ -55,7 +56,9 @@ struct KeyBoard: View {
                     if let letter = vm.keyboard.first(where: {$0.character == myCharacter}) {
                         KeyboardLetter(letter: letter)
                             .onTapGesture {
-                                character = letter.character
+                                if !vm.won {
+                                    character = letter.character
+                                }
                             }
                     }
                 }
@@ -65,7 +68,9 @@ struct KeyBoard: View {
                     if let letter = vm.keyboard.first(where: {$0.character == myCharacter}) {
                         KeyboardLetter(letter: letter)
                             .onTapGesture {
-                                character = letter.character
+                                if !vm.won {
+                                    character = letter.character
+                                }
                             }
                     }
                 }
@@ -73,15 +78,27 @@ struct KeyBoard: View {
             
             HStack(spacing: 2) {
                 KeyboardLetter(letter: WordleModel.Letter("⏎"))
+                    .onTapGesture {
+                        if !vm.won {
+                            character = "⏎"
+                        }
+                    }
                 ForEach(thirdRow, id: \.self) { myCharacter in
                     if let letter = vm.keyboard.first(where: {$0.character == myCharacter}) {
                         KeyboardLetter(letter: letter)
                             .onTapGesture {
-                                character = letter.character
+                                if !vm.won {
+                                    character = letter.character
+                                }
                             }
                     }
                 }
                 KeyboardLetter(letter: WordleModel.Letter("⌫"))
+                    .onTapGesture {
+                        if !vm.won {
+                            character = "⌫"
+                        }
+                    }
             }
             .offset(x: -17.5, y: 0)
         }
