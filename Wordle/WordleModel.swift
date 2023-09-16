@@ -15,6 +15,7 @@ class WordleModel: ObservableObject {
     
     @Published var chosenWord = [String]()
     @Published var tries = [[Letter]]()
+    @Published var keyboard = [Letter]()
     
     @Published var tryNumber = 0
     @Published var fieldNumber = 0
@@ -47,7 +48,13 @@ class WordleModel: ObservableObject {
 
     init() {
         readData()
+        initKeyboard()
         newGame()
+    }
+    func initKeyboard() {
+        for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" {
+            keyboard.append(Letter(String(letter)))
+        }
     }
     
     func newGame() {
@@ -93,24 +100,41 @@ class WordleModel: ObservableObject {
             }
             return
         }
+        
         var checkWord = chosenWord
+        var letter: Letter
+
         for index in 0..<5 {
-            if tries[fieldNumber][index].character == chosenWord[index] {
-                tries[fieldNumber][index].rightPlace = true
+            letter = tries[fieldNumber][index]
+            if letter.character == chosenWord[index] {
+                letter.rightPlace = true
                 checkWord[index] = ""
             }
             else {
-                tries[fieldNumber][index].rightPlace = false
-                tries[fieldNumber][index].rightLetter = false
-                tries[fieldNumber][index].wrong = true
+                letter.rightPlace = false
+                letter.rightLetter = false
+                letter.wrong = true
             }
+            if let keyIndex = keyboard.firstIndex(where: {$0.character == letter.character}) {
+                keyboard[keyIndex].rightPlace = letter.rightPlace
+                keyboard[keyIndex].rightLetter = letter.rightLetter
+                keyboard[keyIndex].wrong = letter.wrong
+            }
+            tries[fieldNumber][index] = letter
         }
         for index in 0..<5 {
-            if checkWord.contains(where: {$0 == tries[fieldNumber][index].character}) {
-                tries[fieldNumber][index].rightLetter = true
-                tries[fieldNumber][index].wrong = false
+            letter = tries[fieldNumber][index]
+            if checkWord.contains(where: {$0 == letter.character}) {
+                letter.rightLetter = true
+                letter.wrong = false
                 checkWord[index] = ""
             }
+            if let keyIndex = keyboard.firstIndex(where: {$0.character == letter.character}) {
+                keyboard[keyIndex].rightPlace = letter.rightPlace
+                keyboard[keyIndex].rightLetter = letter.rightLetter
+                keyboard[keyIndex].wrong = letter.wrong
+            }
+            tries[fieldNumber][index] = letter
         }
         fieldNumber += 1
     }
@@ -156,7 +180,7 @@ class WordleModel: ObservableObject {
     }
     
     func writaData() {
-        var output = myStrings.map{$0}.joined(separator: "\n")
+        let output = myStrings.map{$0}.joined(separator: "\n")
         if let path = Bundle.main.path(forResource: "german", ofType: "txt") {
             do {
                 try output.write(toFile: path, atomically: false, encoding: String.Encoding.utf8)

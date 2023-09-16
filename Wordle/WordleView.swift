@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  WordleView.swift
 //  Wordle
 //
 //  Created by Holger Becker on 09.09.23.
@@ -8,9 +8,9 @@
 import SwiftUI
 
 
-struct ContentView: View {
-    @StateObject var vm = WordleModel()
-        
+struct WordleView: View {
+    @EnvironmentObject var vm: WordleModel
+
     @FocusState private var focusedField: WordleModel.Field?
 
     var body: some View {
@@ -33,7 +33,7 @@ struct ContentView: View {
                 KeyBoard(character: $vm.letterInput)
                     .onChange(of: vm.letterInput) { newValue in
                         if newValue != "" {
-                            if newValue == "🔙" {
+                            if newValue == "⌫" {
                                 vm.backspace()
                                 return
                             }
@@ -163,8 +163,9 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct WordleView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        WordleView()
+            .environmentObject(WordleModel())
     }
 }
