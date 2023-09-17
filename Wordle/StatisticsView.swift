@@ -60,7 +60,7 @@ struct StatisticsView: View {
     var color = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
     
     var body: some View {
-        VStack() {
+        VStack(spacing: 0) {
             HStack {
                 ResultField(name: "Games", value: statisticsViewModel.totalNumberOfGames)
                 Spacer()
@@ -69,10 +69,11 @@ struct StatisticsView: View {
                 ResultField(name: "Lost", value: statisticsViewModel.numberOfLostGames)
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 120)
-            VStack {
+            .padding(.vertical, 30)
+            VStack(spacing: 10) {
                 Text("Number of Tries")
-                    .font(.headline)
+                    .font(.title2)
+                    .fontWeight(.semibold)
                     .foregroundColor(.white)
                 HStack {
                     ForEach(0..<statisticsViewModel.statistics.count, id: \.self) {index in
@@ -96,26 +97,17 @@ struct StatisticsView: View {
                                     .fill(Color.red)
                                     .frame(height: (geometry.size.height - 60) * max(CGFloat(drawPercentValue) , 0.01))
                             }
-                            .background(Color.green)
                         }
                     }
                 }
-            }
-            .padding()
-            .background {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(LinearGradient(colors: [Color(#colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)), Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1))], startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .shadow(color: .black, radius: 10, x: 10, y: 10)
             }
             .shadow(radius: 5)
 
         }
         .padding(.horizontal)
-//        .foregroundStyle(.ultraThinMaterial)
-//        .background (
-//            Material.ultraThinMaterial
-//            LinearGradient(colors: [Color(#colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1)), Color(#colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1))], startPoint: .topLeading, endPoint: .bottomTrailing)
-//        )
+        .background (
+            LinearGradient(colors: [Color(#colorLiteral(red: 0.8374180198, green: 0.8374378085, blue: 0.8374271393, alpha: 1)), Color(#colorLiteral(red: 0.4756349325, green: 0.4756467342, blue: 0.4756404161, alpha: 1))], startPoint: .topLeading, endPoint: .bottomTrailing)
+        )
     }
     
     struct ResultField: View {
@@ -124,28 +116,23 @@ struct StatisticsView: View {
         var body: some View {
             VStack {
                 Text(name)
-                    .font(.title2)
+                    .font(.title)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
-                    .padding(.bottom, 0.0)
+                    .padding(.bottom, 0)
                 Text("\(value)")
                     .font(.title3)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
                     .frame(width: 80)
-                    .background {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(LinearGradient(gradient: Gradient(colors: [.white, .black]), startPoint: .topLeading, endPoint: .bottomTrailing))
-                            .shadow(color: .black, radius: 10, x: 10, y: 10)
-                    }
-                    .padding(.bottom, 8)
+                    .padding(.bottom, 0)
                     
 
             }
             .frame(maxWidth: .infinity)
             .frame(height: 80)
             .background(
-                LinearGradient(gradient: Gradient(colors: [.red, .blue]), startPoint: .topLeading, endPoint: .bottomTrailing))
+                LinearGradient(gradient: Gradient(colors: [.blue, .black]), startPoint: .top, endPoint: .bottom))
             .clipShape(RoundedRectangle(cornerRadius: 15))
             .shadow(color: .black, radius: 10, x: 10, y: 10)
         }
@@ -156,6 +143,9 @@ struct StatisticsView: View {
 
 struct StatisticsView_Previews: PreviewProvider {
     static var previews: some View {
-                StatisticsView()
+        VStack {
+            Rectangle().fill(.white)
+            StatisticsView()
+        }
     }
 }

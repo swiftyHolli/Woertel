@@ -17,6 +17,7 @@
 		30415B7A2AAD2D54009956DD /* german.txt in Resources */ = {isa = PBXBuildFile; fileRef = 30415B792AAD2D54009956DD /* german.txt */; };
 		307C7A7D2AB63BCB00946292 /* LetterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307C7A7C2AB63BCA00946292 /* LetterView.swift */; };
 		307C7A812AB6557400946292 /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307C7A802AB6557400946292 /* StatisticsView.swift */; };
+		307C7A832AB7680C00946292 /* Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307C7A822AB7680C00946292 /* Toolbar.swift */; };
 		30910D072AB25E1F00E380A8 /* WordleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30910D062AB25E1F00E380A8 /* WordleModel.swift */; };
 		30910D092AB260EC00E380A8 /* KeyBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30910D082AB260EC00E380A8 /* KeyBoardView.swift */; };
 /* End PBXBuildFile section */
@@ -52,6 +53,7 @@
 		30415B792AAD2D54009956DD /* german.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = german.txt; sourceTree = "<group>"; };
 		307C7A7C2AB63BCA00946292 /* LetterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterView.swift; sourceTree = "<group>"; };
 		307C7A802AB6557400946292 /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
+		307C7A822AB7680C00946292 /* Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toolbar.swift; sourceTree = "<group>"; };
 		30910D062AB25E1F00E380A8 /* WordleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordleModel.swift; sourceTree = "<group>"; };
 		30910D082AB260EC00E380A8 /* KeyBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyBoardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -109,6 +111,7 @@
 				307C7A802AB6557400946292 /* StatisticsView.swift */,
 				307C7A7C2AB63BCA00946292 /* LetterView.swift */,
 				30910D082AB260EC00E380A8 /* KeyBoardView.swift */,
+				307C7A822AB7680C00946292 /* Toolbar.swift */,
 				30910D062AB25E1F00E380A8 /* WordleModel.swift */,
 				30415B4F2AACC319009956DD /* Assets.xcassets */,
 				30415B792AAD2D54009956DD /* german.txt */,
@@ -273,6 +276,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				307C7A832AB7680C00946292 /* Toolbar.swift in Sources */,
 				30415B4E2AACC318009956DD /* WordleView.swift in Sources */,
 				307C7A812AB6557400946292 /* StatisticsView.swift in Sources */,
 				30910D092AB260EC00E380A8 /* KeyBoardView.swift in Sources */,

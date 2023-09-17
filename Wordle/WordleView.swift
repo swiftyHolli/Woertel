@@ -11,21 +11,31 @@ import SwiftUI
 struct WordleView: View {
     @EnvironmentObject var vm: WordleModel
     @State var showingStatistics = false
-
+    
     @FocusState private var focusedField: WordleModel.Field?
-
+    
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
-                ForEach(Array(zip(vm.tries.indices, vm.tries)), id: \.0) { (rowIndex, letterRow) in
-                    HStack {
-                        ForEach(Array(zip(letterRow.indices, letterRow)), id: \.0) { (index, letter) in
-                            LetterView(letter: letter, rowIndex: rowIndex, index: index, tryNumber: vm.tryNumber, fieldNumber: vm.fieldNumber, animateField: $vm.animateField)
-                                .onTapGesture {
-                                    vm.tryNumber = index
+                GeometryReader { geometry in
+                    let width = min(geometry.size.width / 6, geometry.size.height / 7)
+                    let _ = print("width: \(width)")
+                    VStack (alignment: .center){
+                        ForEach(Array(zip(vm.tries.indices, vm.tries)), id: \.0) { (rowIndex, letterRow) in
+                            HStack {
+                                ForEach(Array(zip(letterRow.indices, letterRow)), id: \.0) { (index, letter) in
+                                    LetterView(letter: letter, rowIndex: rowIndex, index: index, width: width, tryNumber: vm.tryNumber, fieldNumber: vm.fieldNumber, animateField: $vm.animateField)
+                                        .onTapGesture {
+                                            vm.tryNumber = index
+                                        }
+                                    
                                 }
+                            }
                         }
                     }
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+
+                    //.padding()
                 }
                 Spacer()
                 if vm.cheat {
@@ -34,7 +44,8 @@ struct WordleView: View {
                 if vm.won {
                     Text("Gewonnen!")
                 }
-                KeyBoard(character: $vm.letterInput)
+
+                KeyBoard(character: $vm.letterInput, showingStatistics: $showingStatistics)
                     .onChange(of: vm.letterInput) { newValue in
                         if newValue != "" {
                             if newValue == "⌫" {
@@ -54,9 +65,8 @@ struct WordleView: View {
                         focusedField = .name
                     }
             }
-            .padding()
-            .toolbar{toolBarContent(showingStatistics: $showingStatistics, vm: vm)}
-            .navigationTitle("Wordle")
+            //.padding()
+            .toolbar{Toolbar(vm: vm)}
         }
         .onAppear {
             focusedField = .location
@@ -64,61 +74,10 @@ struct WordleView: View {
         .sheet(isPresented: $showingStatistics) {
             StatisticsView()
                 .presentationDetents([.medium])
-                .presentationBackground(.thinMaterial)
-        }
-    }
-    
-    //MARK: - ToolBar
-    struct toolBarContent: ToolbarContent {
-        @Binding var showingStatistics: Bool
-        var vm: WordleModel
-        var body: some ToolbarContent {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    withAnimation{
-                        vm.checkRow()
-                    }
-                } label: {
-                    Image(systemName: "checkmark.bubble")
-                        .font(.title)
-                        .fontWeight(.semibold)
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    withAnimation{
-                        showingStatistics.toggle()
-                    }
-                } label: {
-                    Image(systemName: "chart.bar.xaxis")
-                        .font(.title)
-                        .fontWeight(.semibold)
-                }
-            }
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    vm.newGame()
-                } label: {
-                    Image(systemName: "restart.circle")
-                        .font(.title)
-                        .fontWeight(.semibold)
-                }
-            }
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    withAnimation{
-                        vm.cheat.toggle()
-                    }
-                } label: {
-                    Image(systemName: "eye")
-                        .font(.title)
-                        .fontWeight(.semibold)
-                }
-            }
+                .presentationDragIndicator(.visible)
         }
     }
 }
-
 struct WordleView_Previews: PreviewProvider {
     static var previews: some View {
         WordleView()
