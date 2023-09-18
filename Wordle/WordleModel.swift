@@ -118,50 +118,35 @@ class WordleModel: ObservableObject {
                 return
             }
             
-            var checkWord = chosenWord
+            let checkWord = chosenWord
             var letter: Letter
             
             for index in 0..<5 {
                 letter = tries[fieldNumber][index]
-                if letter.character == chosenWord[index] {
+                if letter.character == checkWord[index] {
                     letter.rightPlace = true
-                    checkWord[index] = ""
                 }
                 else {
                     letter.rightPlace = false
-                    letter.rightLetter = false
-                    letter.wrong = true
                     for i in 0..<5 {
-                        if checkWord[i] == letter.character {
+                        letter.wrong = true
+                        if checkWord[i] == letter.character && !letter.rightPlace {
                             letter.rightLetter = true
                             letter.wrong = false
-                            checkWord[i] = ""
                         }
                     }
                 }
                 if let keyIndex = keyboard.firstIndex(where: {$0.character == letter.character}) {
-                    keyboard[keyIndex].rightPlace = letter.rightPlace
-                    keyboard[keyIndex].rightLetter = letter.rightLetter
-                    keyboard[keyIndex].wrong = letter.wrong
+                    var key = keyboard[keyIndex]
+                    key.rightPlace = letter.rightPlace || key.rightPlace
+                    key.rightLetter = (letter.rightLetter || key.rightLetter) && !key.rightPlace
+                    key.wrong = letter.wrong && !key.rightPlace && !key.rightLetter
+                    keyboard[keyIndex] = key
                 }
                 tries[fieldNumber][index] = letter
             }
-            for index in 0..<5 {
-                letter = tries[fieldNumber][index]
-                for i in 0..<5 {
-                    if checkWord[i] == letter.character {
-                        letter.rightLetter = true
-                        letter.wrong = false
-                        checkWord[i] = ""
-                    }
-                }
-                if let keyIndex = keyboard.firstIndex(where: {$0.character == letter.character}) {
-                    keyboard[keyIndex].rightPlace = letter.rightPlace
-                    keyboard[keyIndex].rightLetter = letter.rightLetter
-                    keyboard[keyIndex].wrong = letter.wrong
-                }
-                tries[fieldNumber][index] = letter
-            }
+            print(tries[fieldNumber])
+
             fieldNumber += 1
             won = true
             for character in checkWord {

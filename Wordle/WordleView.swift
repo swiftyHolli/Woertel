@@ -9,11 +9,9 @@ import SwiftUI
 
 
 struct WordleView: View {
-    @EnvironmentObject var vm: WordleModel
+    @StateObject var vm = WordleModel()
     @State var showingStatistics = false
-    
-    @FocusState private var focusedField: WordleModel.Field?
-    
+        
     var body: some View {
         NavigationStack {
             VStack {
@@ -34,8 +32,6 @@ struct WordleView: View {
                         }
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height)
-
-                    //.padding()
                 }
                 Spacer()
                 if vm.cheat {
@@ -62,25 +58,20 @@ struct WordleView: View {
                             vm.tries[vm.fieldNumber][vm.tryNumber].character = newValue
                             vm.setNextInputField()
                         }
-                        focusedField = .name
                     }
             }
-            //.padding()
             .toolbar{Toolbar(vm: vm)}
-        }
-        .onAppear {
-            focusedField = .location
         }
         .sheet(isPresented: $showingStatistics) {
             StatisticsView()
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
         }
+        .environmentObject(vm)
     }
 }
 struct WordleView_Previews: PreviewProvider {
     static var previews: some View {
         WordleView()
-            .environmentObject(WordleModel())
     }
 }
