@@ -23,15 +23,15 @@ struct KeyboardLetter: View {
                     ZStack {
                         if letter.wrong && !letter.rightPlace && !letter.rightLetter {
                             RoundedRectangle(cornerRadius: 5)
-                                .fill(.gray)
+                                .fill(WordleColors.wrong)
                         }
                         if letter.rightLetter && !letter.rightPlace {
                             RoundedRectangle(cornerRadius: 5)
-                                .fill(.orange)
+                                .fill(WordleColors.rightLetter)
                         }
                         if letter.rightPlace {
                             RoundedRectangle(cornerRadius: 5)
-                                .fill(.green)
+                                .fill(WordleColors.rightPlace)
                         }
                         
                         RoundedRectangle(cornerRadius: 5)

@@ -95,7 +95,7 @@ struct StatisticsView: View {
                                     .foregroundColor(.white)
                                 Rectangle()
                                     .fill(Color.red)
-                                    .frame(height: (geometry.size.height - 60) * max(CGFloat(drawPercentValue) , 0.01))
+                                    .frame(height: abs(geometry.size.height - 60) * max(CGFloat(drawPercentValue) , 0.01))
                             }
                         }
                     }

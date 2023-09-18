@@ -12,12 +12,7 @@ struct LetterView: View {
     var rowIndex: Int
     var index: Int
     var width: CGFloat
-    
-    let greenColor: UIColor = #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1)
-    let greenShadowColor: UIColor = #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 0.508950745)
-    let orangeColor: UIColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
-    let orangeShadowColor: UIColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0.4962748344)
-    
+        
     var tryNumber: Int
     var fieldNumber: Int
     
@@ -31,16 +26,16 @@ struct LetterView: View {
                 .aspectRatio(1, contentMode: .fill)
                 .background {
                     if letter.rightPlace {
-                        Color(uiColor: greenColor)
-                            .shadow(color: .black, radius: 1, x: 5, y: 3)
+                        WordleColors.rightPlace
+                            .shadow(color: WordleColors.rightPlaceShadow, radius: 1, x: 3, y: 3)
                     }
                     else if letter.rightLetter {
-                        Color(uiColor: orangeColor)
-                            .shadow(color: Color(uiColor: orangeShadowColor), radius: 1, x: 5, y: 5)
+                        WordleColors.rightLetter
+                            .shadow(color: WordleColors.rightLetterShadow, radius: 1, x: 3, y: 3)
                     }
                     else if letter.wrong {
-                        Color.gray
-                            .shadow(color: .gray, radius: 1, x: 3, y: 3)
+                        WordleColors.wrong
+                            .shadow(color: WordleColors.wrongShadow, radius: 1, x: 3, y: 3)
                     }
                     else if letter.character == " "{
                         RoundedRectangle(cornerRadius: 5)

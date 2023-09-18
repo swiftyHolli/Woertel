@@ -103,7 +103,6 @@ class WordleModel: ObservableObject {
             tryNumber = 0
             
             if !myStrings.contains(where: {$0.uppercased() == wordToCheck}) {
-                animateField = fieldNumber
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                     self?.animateField = -1
                 }
@@ -111,7 +110,6 @@ class WordleModel: ObservableObject {
             }
             
             if tries[fieldNumber].contains(where: {$0.character == ""}) {
-                animateField = fieldNumber
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                     self?.animateField = -1
                 }
@@ -123,19 +121,24 @@ class WordleModel: ObservableObject {
             
             for index in 0..<5 {
                 letter = tries[fieldNumber][index]
-                if letter.character == checkWord[index] {
-                    letter.rightPlace = true
+                if tries[fieldNumber][index].character == checkWord[index] {
+                    tries[fieldNumber][index].rightPlace = true
                 }
-                else {
-                    letter.rightPlace = false
-                    for i in 0..<5 {
-                        letter.wrong = true
-                        if checkWord[i] == letter.character && !letter.rightPlace {
+            }
+            for index in 0..<5 {
+                letter = tries[fieldNumber][index]
+                //letter.rightPlace = false
+                for i in 0..<5 {
+                    letter.wrong = true
+                    if (checkWord[i] == letter.character) && !letter.rightPlace {
+                        if checkWord.filter({ $0 == letter.character}).count
+                            > tries[fieldNumber].filter({ $0.character == letter.character && ($0.rightLetter || $0.rightPlace)}).count {
                             letter.rightLetter = true
                             letter.wrong = false
                         }
                     }
                 }
+                tries[fieldNumber][index] = letter
                 if let keyIndex = keyboard.firstIndex(where: {$0.character == letter.character}) {
                     var key = keyboard[keyIndex]
                     key.rightPlace = letter.rightPlace || key.rightPlace
@@ -146,14 +149,18 @@ class WordleModel: ObservableObject {
                 tries[fieldNumber][index] = letter
             }
             print(tries[fieldNumber])
-
-            fieldNumber += 1
-            won = true
-            for character in checkWord {
-                if character != "" {
-                    won = false
+            var willWin = true
+            for index in 0..<5 {
+                if checkWord[index] != tries[fieldNumber][index].character {
+                    willWin = false
+                    break
                 }
             }
+            won = willWin
+            
+            fieldNumber += 1
+            
+            
             if won {
                 switch fieldNumber  {
                 case 1:
