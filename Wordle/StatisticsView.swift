@@ -48,7 +48,6 @@ class StatisticDataModel: ObservableObject {
         statistics.append(Float(numberOfLostGames) / Float(totalNumberOfGames))
         
         multiplier = 1.0 / (statistics.max() ?? 1.0)/// Float(totalNumberOfGames)
-        print(multiplier)
     }
 }
 

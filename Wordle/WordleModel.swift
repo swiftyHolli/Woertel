@@ -25,8 +25,8 @@ class WordleModel: ObservableObject {
     @Published var tries = [[Letter]]()
     @Published var keyboard = [Letter]()
     
-    @Published var tryNumber = 0
-    @Published var fieldNumber = 0
+    @Published var actualColumn = 0
+    @Published var actualRow = 0
     
     @Published var animateField = -1
     @Published var letterInput = ""
@@ -41,9 +41,15 @@ class WordleModel: ObservableObject {
     var originalWord = ""
     
     
-    class Letter: Identifiable {
+    class Letter: Identifiable, Equatable {
         static func == (lhs: WordleModel.Letter, rhs: WordleModel.Letter) -> Bool {
-            return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+            if lhs.character == rhs.character &&
+                lhs.rightLetter == rhs.rightLetter &&
+                lhs.rightPlace == rhs.rightPlace &&
+                lhs.wrong == rhs.wrong {
+                return true
+            }
+            return false
         }
         
         var id = UUID()
@@ -52,7 +58,7 @@ class WordleModel: ObservableObject {
         var rightLetter = false
         var wrong = false
         var character = ""
-        
+                
         init(_ letter: String) {
             self.character = letter
         }
@@ -65,6 +71,10 @@ class WordleModel: ObservableObject {
     
     init() {
         readData()
+        for _ in 0..<maxTries {
+            tries.append([Letter(" "), Letter(" "), Letter(" "), Letter(" "), Letter(" ")])
+        }
+
         newGame()
     }
     func initKeyboard() {
@@ -84,42 +94,45 @@ class WordleModel: ObservableObject {
         cheat = false
         myWord = myWord?.uppercased()
         chosenWord.removeAll()
-        tryNumber = 0
-        fieldNumber = 0
+        actualColumn = 0
+        actualRow = 0
         if let myWord = myWord {
             for chr in myWord {
                 chosenWord.append(String(chr))
             }
         }
-        tries.removeAll()
-        for _ in 0..<maxTries {
-            tries.append([Letter(" "), Letter(" "), Letter(" "), Letter(" "), Letter(" ")])
+        for row in 0..<maxTries{
+            for col in 0..<5 {
+                tries[row][col].character = " "
+                tries[row][col].rightPlace = false
+                tries[row][col].rightLetter = false
+                tries[row][col].wrong = false
+                tries[row][col].id = UUID()
+            }
         }
+        animateField = -1
     }
     
     func checkRow() {
+        letterInput = ""
         withAnimation(.easeInOut(duration: 1)) {
             var wordToCheck = ""
-            for chr in tries[fieldNumber] {
+            for chr in tries[actualRow] {
                 wordToCheck = wordToCheck + chr.character
             }
             
-            tryNumber = 0
+            actualColumn = 0
             
             if !myStrings.contains(where: {$0.uppercased() == wordToCheck}) {
-                withAnimation{
-                    animateField = fieldNumber
-                }
+                    animateField = actualRow
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                     self?.animateField = -1
                 }
                 return
             }
             
-            if tries[fieldNumber].contains(where: {$0.character == ""}) {
-                withAnimation{
-                    animateField = fieldNumber
-                }
+            if tries[actualRow].contains(where: {$0.character == ""}) {
+                    animateField = actualRow
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                     self?.animateField = -1
                 }
@@ -130,25 +143,25 @@ class WordleModel: ObservableObject {
             var letter: Letter
             
             for index in 0..<5 {
-                letter = tries[fieldNumber][index]
-                if tries[fieldNumber][index].character == checkWord[index] {
-                    tries[fieldNumber][index].rightPlace = true
+                letter = tries[actualRow][index]
+                if tries[actualRow][index].character == checkWord[index] {
+                    tries[actualRow][index].rightPlace = true
                 }
             }
             for index in 0..<5 {
-                letter = tries[fieldNumber][index]
+                letter = tries[actualRow][index]
                 //letter.rightPlace = false
                 for i in 0..<5 {
                     letter.wrong = true
                     if (checkWord[i] == letter.character) && !letter.rightPlace {
                         if checkWord.filter({ $0 == letter.character}).count
-                            > tries[fieldNumber].filter({ $0.character == letter.character && ($0.rightLetter || $0.rightPlace)}).count {
+                            > tries[actualRow].filter({ $0.character == letter.character && ($0.rightLetter || $0.rightPlace)}).count {
                             letter.rightLetter = true
                             letter.wrong = false
                         }
                     }
                 }
-                tries[fieldNumber][index] = letter
+                tries[actualRow][index] = letter
                 if let keyIndex = keyboard.firstIndex(where: {$0.character == letter.character}) {
                     let key = keyboard[keyIndex]
                     key.rightPlace = letter.rightPlace || key.rightPlace
@@ -156,12 +169,11 @@ class WordleModel: ObservableObject {
                     key.wrong = letter.wrong && !key.rightPlace && !key.rightLetter
                     keyboard[keyIndex] = key
                 }
-                tries[fieldNumber][index] = letter
+                tries[actualRow][index] = letter
             }
-            print(tries[fieldNumber])
             var willWin = true
             for index in 0..<5 {
-                if checkWord[index] != tries[fieldNumber][index].character {
+                if checkWord[index] != tries[actualRow][index].character {
                     willWin = false
                     break
                 }
@@ -169,11 +181,11 @@ class WordleModel: ObservableObject {
             animateColors = true
             won = willWin
             
-            fieldNumber += 1
+            actualRow += 1
             
             
             if won {
-                switch fieldNumber  {
+                switch actualRow  {
                 case 1:
                     numberOfFirstTrys += 1
                 case 2:
@@ -195,20 +207,20 @@ class WordleModel: ObservableObject {
     
     func setNextInputField() {
         letterInput = ""
-        if !(tryNumber == 4) {
-            tryNumber += 1
+        if !(actualColumn == 4) {
+            actualColumn += 1
         }
         
     }
     
     func backspace() {
         letterInput = ""
-        tries[fieldNumber][tryNumber].character = " "
-        tries[fieldNumber][tryNumber].rightPlace = false
-        tries[fieldNumber][tryNumber].rightLetter = false
-        tries[fieldNumber][tryNumber].wrong = false
-        if !(tryNumber == 0) {
-            tryNumber -= 1
+        tries[actualRow][actualColumn].character = " "
+        tries[actualRow][actualColumn].rightPlace = false
+        tries[actualRow][actualColumn].rightLetter = false
+        tries[actualRow][actualColumn].wrong = false
+        if !(actualColumn == 0) {
+            actualColumn -= 1
         }
         
     }

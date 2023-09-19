@@ -19,18 +19,13 @@ struct WordleColors {
 class WordleViewModel: ObservableObject {
     let model = WordleModel()
     
-    //MARK: - intends
-    func enter() {
-        
-    }
-    
 }
 
 
 struct WordleView: View {
     @StateObject var vm = WordleModel()
     @State var showingStatistics = false
-        
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -40,14 +35,9 @@ struct WordleView: View {
                         ForEach(Array(zip(vm.tries.indices, vm.tries)), id: \.0) { (rowIndex, letterRow) in
                             HStack {
                                 ForEach(Array(zip(letterRow.indices, letterRow)), id: \.0) { (index, letter) in
-                                    LetterView(letter: letter, rowIndex: rowIndex, index: index, width: max(width, 6), tryNumber: vm.tryNumber, fieldNumber: vm.fieldNumber, animateField: $vm.animateField, animateColors: $vm.animateColors)
-                                        .onTapGesture {
-                                            vm.tryNumber = index
-                                        }
+                                    LetterView(letter: letter, rowIndex: rowIndex, index: index, width: max(width, 6), tryNumber: vm.actualColumn, fieldNumber: vm.actualRow, animateColors: $vm.animateColors, animateFieldNumber: $vm.animateField)
                                 }
                             }
-                            .modifier(ShakeEffect(shakes: $vm.animateField.wrappedValue == rowIndex ? 1 : 0))
-                            .animation(.easeInOut(duration: 0.5), value: $vm.animateField.wrappedValue == rowIndex)
                         }
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height)
@@ -70,11 +60,13 @@ struct WordleView: View {
                             if newValue == "⏎" {
                                 vm.checkRow()
                                 if vm.won {
-                                    showingStatistics.toggle()
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 * 5) {
+                                        showingStatistics.toggle()
+                                    }
                                 }
                                 return
                             }
-                            vm.tries[vm.fieldNumber][vm.tryNumber].character = newValue
+                            vm.tries[vm.actualRow][vm.actualColumn].character = newValue
                             vm.setNextInputField()
                         }
                     }

@@ -11,7 +11,9 @@ struct KeyboardLetter: View {
     @EnvironmentObject var vm: WordleModel
     var body: some View {
         Button {
-            vm.letterInput = letter.character
+            if !vm.won {
+                vm.letterInput = letter.character
+            }
         } label: {
             Text(letter.character)
                 .font(.title)
@@ -116,11 +118,6 @@ struct KeyBoard: View {
                     ForEach(firstRow, id: \.self) { myCharacter in
                         if let letter = vm.keyboard.first(where: {$0.character == myCharacter}) {
                             KeyboardLetter(letter: letter)
-                                .onTapGesture {
-                                    if !vm.won {
-                                        character = letter.character
-                                    }
-                                }
                         }
                     }
                 }
@@ -128,11 +125,6 @@ struct KeyBoard: View {
                     ForEach(secondRow, id: \.self) { myCharacter in
                         if let letter = vm.keyboard.first(where: {$0.character == myCharacter}) {
                             KeyboardLetter(letter: letter)
-                                .onTapGesture {
-                                    if !vm.won {
-                                        character = letter.character
-                                    }
-                                }
                         }
                     }
                 }
@@ -141,19 +133,9 @@ struct KeyBoard: View {
                     ForEach(thirdRow, id: \.self) { myCharacter in
                         if let letter = vm.keyboard.first(where: {$0.character == myCharacter}) {
                             KeyboardLetter(letter: letter)
-                                .onTapGesture {
-                                    if !vm.won {
-                                        character = letter.character
-                                    }
-                                }
                         }
                     }
                     KeyboardLetter(letter: WordleModel.Letter("⌫"))
-                        .onTapGesture {
-                            if !vm.won {
-                                character = "⌫"
-                            }
-                        }
                 }
                 .offset(x: 0, y: 0)
             }

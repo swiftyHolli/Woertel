@@ -10,6 +10,8 @@ import SwiftUI
 
 
 struct LetterView: View {
+    @EnvironmentObject var vm: WordleModel
+    
     var letter: WordleModel.Letter
     var rowIndex: Int
     var index: Int
@@ -20,14 +22,16 @@ struct LetterView: View {
     
     @State var wordleColor = Color.white
     @State var wordleShadowColor = Color.black
-        
-    @Binding var animateField: Int
+    @State var animateField = false
+    @State var letterColor = Color.black
+
     @Binding var animateColors: Bool
-    
+    @Binding var animateFieldNumber: Int
+
     var body: some View {
         ZStack {
             Text(letter.character)
-                .foregroundColor(letter.rightLetter || letter.rightPlace || letter.wrong ? .white : .black)
+                .foregroundColor(letterColor)
                 .font(.system(size: width - 10, weight: .semibold, design: .default))
                 .frame(width: width - 5, height: width - 5)
                 .aspectRatio(1, contentMode: .fill)
@@ -50,32 +54,52 @@ struct LetterView: View {
                         }
                     }
                 }
+                .onTapGesture {
+                    if !vm.won && vm.actualRow == rowIndex {
+                        vm.actualColumn = index
+                    }
+                }
+
         }
         .rotationEffect(letter.rightPlace || letter.rightLetter ? .degrees(0) : .degrees(360))
-        //
         .animation(.easeInOut(duration: 0.5).delay(Double(index) * 0.5), value: letter.rightPlace || letter.rightLetter || letter.wrong)
-        //            .animation(.easeInOut(duration: 1), value: letter.wrong)
+
+        .modifier(ShakeEffect(shakes: animateField ? 1 : 0))
+        .animation(.easeInOut(duration: 0.5), value: animateField)
+
         .onChange(of: animateColors) { _ in
             withAnimation(.easeInOut(duration: 0.5).delay(0.5 * Double(index))) {
                 if letter.rightPlace {
                     wordleColor = WordleColors.rightPlace
                     wordleShadowColor = WordleColors.rightPlaceShadow
+                    letterColor = .white
                 }
                 else if letter.rightLetter {
                     wordleColor = WordleColors.rightLetter
                     wordleShadowColor = WordleColors.rightLetter
+                    letterColor = .white
                 }
                 else if letter.wrong {
                     wordleColor = WordleColors.wrong
                     wordleShadowColor = WordleColors.wrongShadow
+                    letterColor = .white
                 }
-                let _ = print(wordleColor)
                 animateColors = false
             }
         }
-        
+        .onChange(of: animateFieldNumber) { _ in
+            if animateFieldNumber == rowIndex {
+                animateField.toggle()
+            }
+        }
+        .onChange(of: letter.character) { newValue in
+            if letter.character == " " {
+                wordleColor = .white
+                wordleShadowColor = .black
+                letterColor = .black
+            }
+        }
     }
-    
 }
 
 struct ShakeEffect: GeometryEffect {
@@ -97,7 +121,8 @@ struct ShakeEffect: GeometryEffect {
 
 struct LetterView_Previews: PreviewProvider {
     static var previews: some View {
-        LetterView(letter: WordleModel.Letter("A"), rowIndex: 0, index: 0,width: 55, tryNumber: 0, fieldNumber: 0, animateField: .constant(-1), animateColors: .constant(false))
+        LetterView(letter: WordleModel.Letter("A"), rowIndex: 0, index: 0,width: 55, tryNumber: 0, fieldNumber: 0, animateColors: .constant(false), animateFieldNumber: .constant(-1))
+        
             .padding()
     }
 }
