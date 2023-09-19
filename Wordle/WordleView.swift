@@ -28,7 +28,7 @@ class WordleViewModel: ObservableObject {
 
 
 struct WordleView: View {
-    @StateObject var vm = WordleViewModel().model
+    @StateObject var vm = WordleModel()
     @State var showingStatistics = false
         
     var body: some View {
@@ -40,7 +40,7 @@ struct WordleView: View {
                         ForEach(Array(zip(vm.tries.indices, vm.tries)), id: \.0) { (rowIndex, letterRow) in
                             HStack {
                                 ForEach(Array(zip(letterRow.indices, letterRow)), id: \.0) { (index, letter) in
-                                    LetterView(letter: letter, rowIndex: rowIndex, index: index, width: max(width, 6), tryNumber: vm.tryNumber, fieldNumber: vm.fieldNumber, animateField: $vm.animateField)
+                                    LetterView(letter: letter, rowIndex: rowIndex, index: index, width: max(width, 6), tryNumber: vm.tryNumber, fieldNumber: vm.fieldNumber, animateField: $vm.animateField, animateColors: $vm.animateColors)
                                         .onTapGesture {
                                             vm.tryNumber = index
                                         }

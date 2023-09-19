@@ -32,6 +32,7 @@ class WordleModel: ObservableObject {
     @Published var letterInput = ""
     @Published var cheat = false
     @Published var won = false
+    @Published var animateColors = false
     
     let maxTries = 6
     
@@ -40,7 +41,11 @@ class WordleModel: ObservableObject {
     var originalWord = ""
     
     
-    struct Letter: Identifiable, Hashable {
+    class Letter: Identifiable {
+        static func == (lhs: WordleModel.Letter, rhs: WordleModel.Letter) -> Bool {
+            return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+        }
+        
         var id = UUID()
         
         var rightPlace = false
@@ -145,7 +150,7 @@ class WordleModel: ObservableObject {
                 }
                 tries[fieldNumber][index] = letter
                 if let keyIndex = keyboard.firstIndex(where: {$0.character == letter.character}) {
-                    var key = keyboard[keyIndex]
+                    let key = keyboard[keyIndex]
                     key.rightPlace = letter.rightPlace || key.rightPlace
                     key.rightLetter = (letter.rightLetter || key.rightLetter) && !key.rightPlace
                     key.wrong = letter.wrong && !key.rightPlace && !key.rightLetter
@@ -161,6 +166,7 @@ class WordleModel: ObservableObject {
                     break
                 }
             }
+            animateColors = true
             won = willWin
             
             fieldNumber += 1
