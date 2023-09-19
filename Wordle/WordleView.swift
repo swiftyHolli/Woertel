@@ -16,9 +16,19 @@ struct WordleColors {
     static let wrongShadow = Color(uiColor: #colorLiteral(red: 0.3137255013, green: 0.3137255013, blue: 0.3137255013, alpha: 1))
 }
 
+class WordleViewModel: ObservableObject {
+    let model = WordleModel()
+    
+    //MARK: - intends
+    func enter() {
+        
+    }
+    
+}
+
 
 struct WordleView: View {
-    @StateObject var vm = WordleModel()
+    @StateObject var vm = WordleViewModel().model
     @State var showingStatistics = false
         
     var body: some View {
@@ -34,9 +44,10 @@ struct WordleView: View {
                                         .onTapGesture {
                                             vm.tryNumber = index
                                         }
-                                    
                                 }
                             }
+                            .modifier(ShakeEffect(shakes: $vm.animateField.wrappedValue == rowIndex ? 1 : 0))
+                            .animation(.easeInOut(duration: 0.5), value: $vm.animateField.wrappedValue == rowIndex)
                         }
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height)
@@ -77,6 +88,7 @@ struct WordleView: View {
         }
         .environmentObject(vm)
     }
+
 }
 struct WordleView_Previews: PreviewProvider {
     static var previews: some View {

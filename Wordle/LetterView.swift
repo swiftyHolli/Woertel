@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+
 struct LetterView: View {
     var letter: WordleModel.Letter
     var rowIndex: Int
@@ -15,6 +17,8 @@ struct LetterView: View {
         
     var tryNumber: Int
     var fieldNumber: Int
+    
+    @State var scale = 0.0
     
     @Binding var animateField: Int
     
@@ -54,10 +58,10 @@ struct LetterView: View {
                         }
                     }
                 }
-                .modifier(ShakeEffect(shakes: animateField == rowIndex ? 2 : 0))
+
                 .rotationEffect(letter.rightPlace || letter.rightLetter ? .degrees(0) : .degrees(360))
             //
-            //            .animation(.easeInOut(duration: 1), value: letter.rightPlace || letter.rightLetter)
+                .animation(.easeInOut(duration: 0.5).delay(Double(index) * 0.5), value: letter.rightPlace || letter.rightLetter || letter.wrong)
             //            .animation(.easeInOut(duration: 1), value: letter.wrong)
     }
 }

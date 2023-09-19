@@ -27,27 +27,27 @@ class WordleModel: ObservableObject {
     
     @Published var tryNumber = 0
     @Published var fieldNumber = 0
-
+    
     @Published var animateField = -1
     @Published var letterInput = ""
     @Published var cheat = false
     @Published var won = false
-
+    
     let maxTries = 6
-
+    
     
     var myStrings = [String]()
     var originalWord = ""
-
+    
     
     struct Letter: Identifiable, Hashable {
         var id = UUID()
-                
+        
         var rightPlace = false
         var rightLetter = false
         var wrong = false
         var character = ""
-
+        
         init(_ letter: String) {
             self.character = letter
         }
@@ -57,7 +57,7 @@ class WordleModel: ObservableObject {
         }
     }
     
-
+    
     init() {
         readData()
         newGame()
@@ -74,14 +74,13 @@ class WordleModel: ObservableObject {
         won = false
         var myWord = myStrings.randomElement()
         initKeyboard()
-
+        
         originalWord = myWord ?? ""
         cheat = false
         myWord = myWord?.uppercased()
         chosenWord.removeAll()
         tryNumber = 0
         fieldNumber = 0
-        print(myWord ?? "Scheiße")
         if let myWord = myWord {
             for chr in myWord {
                 chosenWord.append(String(chr))
@@ -92,7 +91,7 @@ class WordleModel: ObservableObject {
             tries.append([Letter(" "), Letter(" "), Letter(" "), Letter(" "), Letter(" ")])
         }
     }
-        
+    
     func checkRow() {
         withAnimation(.easeInOut(duration: 1)) {
             var wordToCheck = ""
@@ -103,6 +102,9 @@ class WordleModel: ObservableObject {
             tryNumber = 0
             
             if !myStrings.contains(where: {$0.uppercased() == wordToCheck}) {
+                withAnimation{
+                    animateField = fieldNumber
+                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                     self?.animateField = -1
                 }
@@ -110,6 +112,9 @@ class WordleModel: ObservableObject {
             }
             
             if tries[fieldNumber].contains(where: {$0.character == ""}) {
+                withAnimation{
+                    animateField = fieldNumber
+                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                     self?.animateField = -1
                 }
@@ -186,7 +191,6 @@ class WordleModel: ObservableObject {
         letterInput = ""
         if !(tryNumber == 4) {
             tryNumber += 1
-            print("\(tryNumber)")
         }
         
     }
@@ -199,7 +203,6 @@ class WordleModel: ObservableObject {
         tries[fieldNumber][tryNumber].wrong = false
         if !(tryNumber == 0) {
             tryNumber -= 1
-            print("\(tryNumber)")
         }
         
     }
