@@ -29,7 +29,6 @@ class StatisticDataModel: ObservableObject {
     @AppStorage("fifthTry") var numberOfFifthTrys: Int = 0
     @AppStorage("sixthTry") var numberOfSixthTrys: Int = 0
 
-
     
     init() {
         loadStatistics()
@@ -39,21 +38,21 @@ class StatisticDataModel: ObservableObject {
         totalNumberOfGames = numberOfGames
         numberOfLostGames = totalNumberOfGames - numberOfFirstTrys - numberOfSecondTrys - numberOfThirdTrys - numberOFourthTrys - numberOfFifthTrys - numberOfSixthTrys
         numberOfWonGames = numberOfFirstTrys + numberOfSecondTrys + numberOfThirdTrys + numberOFourthTrys + numberOfFifthTrys + numberOfSixthTrys
-        statistics.append(Float(numberOfFirstTrys) / Float(totalNumberOfGames))
-        statistics.append(Float(numberOfSecondTrys) / Float(totalNumberOfGames))
-        statistics.append(Float(numberOfThirdTrys) / Float(totalNumberOfGames))
-        statistics.append(Float(numberOFourthTrys) / Float(totalNumberOfGames))
-        statistics.append(Float(numberOfFifthTrys) / Float(totalNumberOfGames))
-        statistics.append(Float(numberOfSixthTrys) / Float(totalNumberOfGames))
-        statistics.append(Float(numberOfLostGames) / Float(totalNumberOfGames))
+        let numberOfGames = totalNumberOfGames == 0 ? 1 : totalNumberOfGames
+        statistics.append(Float(numberOfFirstTrys) / Float(numberOfGames))
+        statistics.append(Float(numberOfSecondTrys) / Float(numberOfGames))
+        statistics.append(Float(numberOfThirdTrys) / Float(numberOfGames))
+        statistics.append(Float(numberOFourthTrys) / Float(numberOfGames))
+        statistics.append(Float(numberOfFifthTrys) / Float(numberOfGames))
+        statistics.append(Float(numberOfSixthTrys) / Float(numberOfGames))
+        statistics.append(Float(numberOfLostGames) / Float(numberOfGames))
         
-        multiplier = 1.0 / (statistics.max() ?? 1.0)/// Float(totalNumberOfGames)
+        multiplier = 1.0 / (statistics.max() ?? 0 == 0 ? 1.0 : statistics.max() ?? 0)
     }
 }
 
 struct StatisticsView: View {
     
-    @EnvironmentObject var vm: WordleModel
     @StateObject var statisticsViewModel = StatisticDataModel()
     
     var color = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
@@ -148,3 +147,4 @@ struct StatisticsView_Previews: PreviewProvider {
         }
     }
 }
+

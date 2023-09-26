@@ -1,19 +1,18 @@
 //
 //  WordleApp.swift
-//  Wordle
+//  Wordle MVVM
 //
-//  Created by Holger Becker on 09.09.23.
+//  Created by Holger Becker on 21.09.23.
 //
 
 import SwiftUI
 
 @main
 struct WordleApp: App {
-    let vm = WordleModel()
+    @StateObject var game = WordleViewModel()
     var body: some Scene {
         WindowGroup {
-            WordleView()
-                .environmentObject(vm)
+            WordleView(vm: game)
         }
     }
 }

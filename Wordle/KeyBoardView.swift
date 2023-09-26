@@ -1,73 +1,60 @@
 //
-//  KeyBoardView.swift
-//  Wordle
+//  KeyboardView.swift
+//  Wordle MVVM
 //
-//  Created by Holger Becker on 13.09.23.
+//  Created by Holger Becker on 23.09.23.
 //
 
 import SwiftUI
+
 struct KeyboardLetter: View {
-    var letter: WordleModel.Letter
-    @EnvironmentObject var vm: WordleModel
+    @ObservedObject var vm: WordleViewModel
+    var letter: WordleModel.WordleLetter
     var body: some View {
+        let width = min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) / 12
         Button {
-            if !vm.won {
-                vm.letterInput = letter.character
-            }
+            vm.keyPressed(letter)
         } label: {
-            Text(letter.character)
-                .font(.title)
-                .fontWeight(.semibold)
-                .foregroundColor(letter.rightLetter || letter.rightPlace || letter.wrong ? .white : .black)
-                .frame(width: UIScreen.main.bounds.width / 11, height: UIScreen.main.bounds.width / 11, alignment: .center)
-                .aspectRatio(1, contentMode: .fill)
+            Text(letter.letter)
+                .font(.system(size: 800))
+                .padding(width * 0.1)
+                .fontWeight(.bold)
+                .foregroundColor(letter.rightLetter || letter.rightPlace || letter.wrongLetter ? .white : .white)
+                .minimumScaleFactor(0.01)
+                .frame(width: width, height: width ,alignment: .center)
                 .background {
                     ZStack {
-                        if letter.wrong && !letter.rightPlace && !letter.rightLetter {
-                            RoundedRectangle(cornerRadius: 5)
-                                .fill(WordleColors.wrong)
-                        }
-                        if letter.rightLetter && !letter.rightPlace {
-                            RoundedRectangle(cornerRadius: 5)
-                                .fill(WordleColors.rightLetter)
-                        }
-                        if letter.rightPlace {
-                            RoundedRectangle(cornerRadius: 5)
-                                .fill(WordleColors.rightPlace)
-                        }
-                        
-                        RoundedRectangle(cornerRadius: 5)
-                            .stroke(lineWidth: 1)
-                            .foregroundColor(Color.black)
+                        RoundedRectangle(cornerRadius: width * 0.2)
+                            .fill( LinearGradient(colors: [Color(uiColor: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)),Color(uiColor: #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)), Color(uiColor: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1))], startPoint: .top, endPoint:.bottom))
+                            .shadow(color: .black, radius: width * 0.1, x: 0, y: width * 0.1)
+                        RoundedRectangle(cornerRadius: width * 0.2)
+                            .fill(WordleColors.wordleColor(letter: letter, shadow: false))
+                            .opacity(letter.rightLetter || letter.rightPlace || letter.wrongLetter ? 1 : 0)
                     }
                 }
-                .fixedSize(horizontal: false, vertical: true)
+                .padding(width * 0.1)
+                .animation(.easeIn(duration: 1).delay(Double(vm.numberOfLetters) * 0.5), value: letter.rightLetter || letter.rightPlace || letter.wrongLetter)
         }
-
+        
     }
 }
 
-struct KeyBoard: View {
-    @Binding var character: String
-    @Binding var showingStatistics: Bool
-    
-    @EnvironmentObject var vm: WordleModel
+
+struct KeyboardView: View {
+    @ObservedObject var vm: WordleViewModel
+    @State var showingAlert = false
     
     let backgroundColor = Color(uiColor: #colorLiteral(red: 0.8374180198, green: 0.8374378085, blue: 0.8374271393, alpha: 1))
-    
-    var firstRow = ["Q","W","E","R","T","Z","U","I","O","P"]
-    var secondRow = ["A","S","D","F","G","H","J","K","L"]
-    var thirdRow = ["Y","X","C","V","B","N","M"]
     
     var body: some View {
         VStack(spacing: 5) {
             Rectangle()
-                .frame(maxWidth: .infinity)
-                .frame(height: 5)
+                .fill(                    LinearGradient(colors: [Color(uiColor: #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)),Color(uiColor: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)), Color(uiColor: #colorLiteral(red: 0.7540688515, green: 0.7540867925, blue: 0.7540771365, alpha: 1))], startPoint: .leading, endPoint:.trailing )
+                )
+                .frame(width: .infinity, height: 5)
             HStack {
                 Button {
-                    showingStatistics.toggle()
-                    
+                    vm.chartButtonTapped()
                 } label: {
                     Text("\(Image(systemName: "chart.bar.xaxis"))   ")
                         .font(.largeTitle)
@@ -76,83 +63,87 @@ struct KeyBoard: View {
                         .clipShape(Capsule())
                 }
                 Button {
-                    if !vm.won {
-                        character = "⏎"
-                    }
-                    
+                    vm.settingsButtonTapped()
                 } label: {
-                    Text("Enter")
+                    Text("\(Image(systemName: "info"))   ")
                         .font(.largeTitle)
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
                         .background(LinearGradient(colors: [.blue, .black], startPoint: .top, endPoint:.bottom ))
                         .clipShape(Capsule())
                 }
+                .padding()
                 Button {
                     if !vm.won {
-                        character = "⏎"
+                        showingAlert = true
                     }
-                    
+                    else {
+                        vm.newGame()
+                    }
                 } label: {
-                    Text("\(Image(systemName: "info"))    ")
+                    Text("\(Image(systemName: "checkmark.circle.badge.xmark"))    ")
                         .font(.largeTitle)
                         .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .frame(width: 66)
+                        .foregroundColor(vm.enableNewGame ? .white : .gray)
                         .background(LinearGradient(colors: [.blue, .black], startPoint: .top, endPoint:.bottom ))
                         .clipShape(Capsule())
                 }
+                .alert("Dieses Spiel abbrechen und ein Neues starten?", isPresented: $showingAlert) {
+                    Button("Nein", role: .cancel) { }
+                    Button("Ja", role: .destructive) {vm.newGame()}
+                }
+                .disabled(!vm.enableNewGame)
+                Spacer()
+                Button {
+                    vm.check()
+                } label: {
+                    Text("\(Image(systemName: "checkmark"))")
+                        .font(.largeTitle)
+                        .fontWeight(.semibold)
+                        .foregroundColor(vm.won ? .gray : .white)
+                        .frame(maxWidth: 300)
+                        .background(LinearGradient(colors: [.blue, .black], startPoint: .top, endPoint:.bottom ))
+                        .clipShape(Capsule())
+                }
+                .disabled(vm.won)
             }
             .padding(.horizontal)
-            .padding(.top, 8.0)
-            Rectangle()
-                .frame(maxWidth: .infinity)
-                .frame(height: 5)
-                .padding(.vertical, 8.0)
-            
-            let keySpacing = 3.0
-
-            VStack(spacing: 5.0) {
-                HStack(spacing: keySpacing) {
-                    ForEach(firstRow, id: \.self) { myCharacter in
-                        if let letter = vm.keyboard.first(where: {$0.character == myCharacter}) {
-                            KeyboardLetter(letter: letter)
-                        }
+            VStack(spacing: 0) {
+                HStack(spacing: 0) {
+                    ForEach(0..<10) { index in
+                        KeyboardLetter(vm: vm, letter: vm.keys[index])
                     }
                 }
-                HStack(spacing: keySpacing) {
-                    ForEach(secondRow, id: \.self) { myCharacter in
-                        if let letter = vm.keyboard.first(where: {$0.character == myCharacter}) {
-                            KeyboardLetter(letter: letter)
-                        }
+                HStack(spacing: 0) {
+                    Spacer()
+                    ForEach(10..<19) { index in
+                        KeyboardLetter(vm: vm, letter: vm.keys[index])
+                    }
+                    Spacer()
+                }
+                HStack(spacing: 0) {
+                    ForEach(19..<27) { index in
+                        KeyboardLetter(vm: vm, letter: vm.keys[index])
                     }
                 }
-                
-                HStack(spacing: keySpacing) {
-                    ForEach(thirdRow, id: \.self) { myCharacter in
-                        if let letter = vm.keyboard.first(where: {$0.character == myCharacter}) {
-                            KeyboardLetter(letter: letter)
-                        }
-                    }
-                    KeyboardLetter(letter: WordleModel.Letter("⌫"))
-                }
-                .offset(x: 0, y: 0)
             }
         }
         .background {
-            backgroundColor
+            //backgroundColor
+            LinearGradient(colors: [Color(uiColor: #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1)),Color(uiColor: #colorLiteral(red: 0.1764705926, green: 0.01176470611, blue: 0.5607843399, alpha: 1)), Color(uiColor: #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1))], startPoint: .top, endPoint:.bottom )
+
                 .ignoresSafeArea()
+                .opacity(0)
         }
     }
 }
 
-struct KeyBoardView_Previews: PreviewProvider {
+struct KeyboardView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
+            Text("Hallo")
             Spacer()
-            KeyBoard(character: .constant("A"), showingStatistics: .constant(false))
-                .environmentObject(WordleModel())
+            KeyboardView(vm: WordleViewModel())
         }
     }
 }

@@ -1,253 +1,206 @@
 //
 //  WordleModel.swift
-//  Wordle
+//  Wordle MVVM
 //
-//  Created by Holger Becker on 13.09.23.
+//  Created by Holger Becker on 21.09.23.
 //
 
-import SwiftUI
+import Foundation
 
-class WordleModel: ObservableObject {
-    @AppStorage("totalGames") var numberOfGames: Int = 0
-    @AppStorage("firstTry") var numberOfFirstTrys: Int = 0
-    @AppStorage("secondTry") var numberOfSecondTrys: Int = 0
-    @AppStorage("thirdTry") var numberOfThirdTrys: Int = 0
-    @AppStorage("fourthTry") var numberOFourthTrys: Int = 0
-    @AppStorage("fifthTry") var numberOfFifthTrys: Int = 0
-    @AppStorage("sixthTry") var numberOfSixthTrys: Int = 0
+struct WordleModel {
     
+    private(set) var  letterField = [WordleLetter]()
+    private(set) var  keyboardField = [WordleLetter]()
+    private var numberOfLetters: Int = 5
+    private var numberOfRows: Int = 6
+    private var selectedIndex = 0
     
-    enum Field: Int, Hashable {
-        case name, location, date, addAttendee
+    var words = [String]()
+    var word = ""
+    
+    var actualRow = 0
+    var actualColumn = 0
+        
+    let keyboardLetters = ["Q","W","E","R","T","Z","U","I","O","P",
+                           "A","S","D","F","G","H","J","K","L",
+                           "Y","X","C","V","B","N","M", "⌫"]
+    
+    init(numberOfLetters: Int, NumberOfRows: Int) {
+        newGame(numberOfLetters: numberOfLetters, NumberOfRows: NumberOfRows)
     }
     
-    @Published var chosenWord = [String]()
-    @Published var tries = [[Letter]]()
-    @Published var keyboard = [Letter]()
-    
-    @Published var actualColumn = 0
-    @Published var actualRow = 0
-    
-    @Published var animateField = -1
-    @Published var letterInput = ""
-    @Published var cheat = false
-    @Published var won = false
-    @Published var animateColors = false
-    
-    let maxTries = 6
-    
-    
-    var myStrings = [String]()
-    var originalWord = ""
-    
-    
-    class Letter: Identifiable, Equatable {
-        static func == (lhs: WordleModel.Letter, rhs: WordleModel.Letter) -> Bool {
-            if lhs.character == rhs.character &&
-                lhs.rightLetter == rhs.rightLetter &&
-                lhs.rightPlace == rhs.rightPlace &&
-                lhs.wrong == rhs.wrong {
-                return true
-            }
-            return false
-        }
+    struct WordleLetter {
+        var letter: String
+        var id: Int
         
-        var id = UUID()
+        var isSelected = false
+        var isDisabled = true
+        var isChecked = false
         
         var rightPlace = false
         var rightLetter = false
-        var wrong = false
-        var character = ""
-                
-        init(_ letter: String) {
-            self.character = letter
-        }
-        init(_ letter: String, wrong: Bool) {
-            self.character = letter
-            self.wrong = wrong
-        }
-    }
-    
-    
-    init() {
-        readData()
-        for _ in 0..<maxTries {
-            tries.append([Letter(" "), Letter(" "), Letter(" "), Letter(" "), Letter(" ")])
-        }
-
-        newGame()
-    }
-    func initKeyboard() {
-        keyboard.removeAll()
-        for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" {
-            keyboard.append(Letter(String(letter)))
-        }
-    }
-    
-    func newGame() {
-        numberOfGames += 1
-        won = false
-        var myWord = myStrings.randomElement()
-        initKeyboard()
+        var wrongLetter = false
         
-        originalWord = myWord ?? ""
-        cheat = false
-        myWord = myWord?.uppercased()
-        chosenWord.removeAll()
-        actualColumn = 0
-        actualRow = 0
-        if let myWord = myWord {
-            for chr in myWord {
-                chosenWord.append(String(chr))
-            }
-        }
-        for row in 0..<maxTries{
-            for col in 0..<5 {
-                tries[row][col].character = " "
-                tries[row][col].rightPlace = false
-                tries[row][col].rightLetter = false
-                tries[row][col].wrong = false
-                tries[row][col].id = UUID()
-            }
-        }
-        animateField = -1
+        var shake = false
     }
     
-    func checkRow() {
-        letterInput = ""
-        withAnimation(.easeInOut(duration: 1)) {
-            var wordToCheck = ""
-            for chr in tries[actualRow] {
-                wordToCheck = wordToCheck + chr.character
+    mutating func newGame(numberOfLetters: Int, NumberOfRows: Int) {
+        self.numberOfLetters = numberOfLetters
+        self.numberOfRows = NumberOfRows
+        
+        letterField = []
+        for index in 0..<numberOfLetters * NumberOfRows{
+            letterField.append(WordleLetter(letter: "", id: index))
+        }
+        keyboardField = []
+        for index in 0..<keyboardLetters.count {
+            keyboardField.append(WordleLetter(letter: keyboardLetters[index], id: index))
+        }
+        readData()
+        word = words.randomElement() ?? ""
+        word = word.uppercased()
+        actualRow = 0
+        actualColumn = 0
+        setSelectedLetter(id: 0)
+    }
+    
+    mutating func setSelectedLetter(id: Int) {
+        for index in actualRowIndizies() {
+            letterField[index].isDisabled = false
+            if index % numberOfLetters == id % numberOfLetters {
+                letterField[index].isSelected = true
+                selectedIndex = index
             }
-            
-            actualColumn = 0
-            
-            if !myStrings.contains(where: {$0.uppercased() == wordToCheck}) {
-                    animateField = actualRow
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                    self?.animateField = -1
-                }
-                return
+            else {
+                letterField[index].isSelected = false
             }
-            
-            if tries[actualRow].contains(where: {$0.character == ""}) {
-                    animateField = actualRow
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                    self?.animateField = -1
-                }
-                return
+        }
+    }
+    
+    mutating func setKeyboardLetter(_ letter: WordleLetter) {
+        let rowIndizies = actualRowIndizies()
+        if letter.letter != "⌫" {
+            letterField[selectedIndex].letter = letter.letter
+            if selectedIndex < rowIndizies[rowIndizies.count - 1] {
+                selectedIndex += 1
+                setSelectedLetter(id: selectedIndex)
             }
-            
-            let checkWord = chosenWord
-            var letter: Letter
-            
-            for index in 0..<5 {
-                letter = tries[actualRow][index]
-                if tries[actualRow][index].character == checkWord[index] {
-                    tries[actualRow][index].rightPlace = true
-                }
+        }
+        else {
+            letterField[selectedIndex].letter = ""
+            if selectedIndex > rowIndizies[0] {
+                selectedIndex -= 1
+                setSelectedLetter(id: selectedIndex)
             }
-            for index in 0..<5 {
-                letter = tries[actualRow][index]
-                //letter.rightPlace = false
-                for i in 0..<5 {
-                    letter.wrong = true
-                    if (checkWord[i] == letter.character) && !letter.rightPlace {
-                        if checkWord.filter({ $0 == letter.character}).count
-                            > tries[actualRow].filter({ $0.character == letter.character && ($0.rightLetter || $0.rightPlace)}).count {
-                            letter.rightLetter = true
-                            letter.wrong = false
-                        }
+        }
+    }
+        
+    mutating func checkRow() {
+        var letter: WordleLetter
+        if !checkFilledWord() {return}
+        for index in actualRowIndizies() {
+            if String(word[index % numberOfLetters]) == letterField[index].letter {
+                letterField[index].rightPlace = true
+            }
+            else {
+                letterField[index].wrongLetter = true
+            }
+        }
+        for index in actualRowIndizies() {
+            letter = letterField[index]
+            for index in actualRowIndizies() {
+                letter.wrongLetter = true
+                if (String(word[index % numberOfLetters]) == letter.letter) && !letter.rightPlace {
+                    if word.filter({ String($0) == letter.letter}).count
+                        > actualRowLetters().filter({ $0.letter == letter.letter && ($0.rightLetter || $0.rightPlace)}).count {
+                        letter.rightLetter = true
+                        letter.wrongLetter = false
                     }
                 }
-                tries[actualRow][index] = letter
-                if let keyIndex = keyboard.firstIndex(where: {$0.character == letter.character}) {
-                    let key = keyboard[keyIndex]
-                    key.rightPlace = letter.rightPlace || key.rightPlace
-                    key.rightLetter = (letter.rightLetter || key.rightLetter) && !key.rightPlace
-                    key.wrong = letter.wrong && !key.rightPlace && !key.rightLetter
-                    keyboard[keyIndex] = key
-                }
-                tries[actualRow][index] = letter
             }
-            var willWin = true
-            for index in 0..<5 {
-                if checkWord[index] != tries[actualRow][index].character {
-                    willWin = false
-                    break
-                }
+            letter.isChecked = true
+            letterField[index] = letter
+            if let keyIndex = keyboardField.firstIndex(where: {$0.letter == letter.letter}) {
+                let key = keyboardField[keyIndex]
+                keyboardField[keyIndex].rightPlace = letter.rightPlace || key.rightPlace
+                keyboardField[keyIndex].rightLetter = (letter.rightLetter || key.rightLetter) && !key.rightPlace
+                keyboardField[keyIndex].wrongLetter = letter.wrongLetter && !key.rightPlace && !key.rightLetter
             }
-            animateColors = true
-            won = willWin
-            
-            actualRow += 1
-            
-            
-            if won {
-                switch actualRow  {
-                case 1:
-                    numberOfFirstTrys += 1
-                case 2:
-                    numberOfSecondTrys += 1
-                case 3:
-                    numberOfThirdTrys += 1
-                case 4:
-                    numberOFourthTrys += 1
-                case 5:
-                    numberOfFifthTrys += 1
-                case 6:
-                    numberOfSixthTrys += 1
-                default:
-                    print("Error")
-                }
-            }
+        }
+        if !won {
+            nextRow()
         }
     }
     
-    func setNextInputField() {
-        letterInput = ""
-        if !(actualColumn == 4) {
-            actualColumn += 1
+    var won: Bool {
+        var count = 0
+        for letter in actualRowLetters() {
+            if letter.rightPlace {
+                count += 1
+            }
+        }
+        if count == numberOfLetters {
+            return true
+        }
+        return false
+    }
+    
+    private mutating func checkFilledWord()->Bool {
+        var success = true
+        var wordToCheck = ""
+        for letter in actualRowLetters() {
+            wordToCheck = wordToCheck + letter.letter
+            if letter.letter == "" {
+                success = false
+                break
+            }
         }
         
-    }
-    
-    func backspace() {
-        letterInput = ""
-        tries[actualRow][actualColumn].character = " "
-        tries[actualRow][actualColumn].rightPlace = false
-        tries[actualRow][actualColumn].rightLetter = false
-        tries[actualRow][actualColumn].wrong = false
-        if !(actualColumn == 0) {
-            actualColumn -= 1
+        if !words.contains(where: {$0.uppercased() == wordToCheck}) {
+            success = false
         }
-        
+
+        if !success {
+            for index in actualRowIndizies() {
+                letterField[index].shake.toggle()
+            }
+        }
+        return success
     }
     
-    func deleteWord() {
-        myStrings.removeAll(where: {$0 == originalWord})
-        writaData()
-        newGame()
+    mutating private func nextRow() {
+        actualRow += actualRow < numberOfRows - 1 ? 1 : 0
+        let indizies = actualRowIndizies()
+        for index in indizies {
+            letterField[index].isDisabled = false
+        }
+        letterField[indizies[0]].isSelected = true
+        selectedIndex = indizies[0]
     }
-
-
-    func readData() {
+    
+    private func actualRowIndizies()->[Int] {
+        var indexField = [Int]()
+        for index in 0..<numberOfRows * numberOfLetters {
+            if index / numberOfLetters == actualRow {
+                indexField.append(index)
+            }
+        }
+        return indexField
+    }
+    
+    private func actualRowLetters()->[WordleLetter] {
+        var letters = [WordleLetter]()
+        for index in actualRowIndizies() {
+            letters.append(letterField[index])
+        }
+        return letters
+    }
+    
+    mutating private func readData() {
         if let path = Bundle.main.path(forResource: "german", ofType: "txt") {
             do {
                 let data = try String(contentsOfFile: path, encoding: .ascii)
-                myStrings = data.components(separatedBy: .newlines)
-            } catch {
-                print(error)
-            }
-        }
-    }
-    
-    func writaData() {
-        let output = myStrings.map{$0}.joined(separator: "\n")
-        if let path = Bundle.main.path(forResource: "german", ofType: "txt") {
-            do {
-                try output.write(toFile: path, atomically: false, encoding: String.Encoding.utf8)
+                words = data.components(separatedBy: .newlines)
             } catch {
                 print(error)
             }
@@ -255,3 +208,8 @@ class WordleModel: ObservableObject {
     }
 }
 
+extension StringProtocol {
+    subscript(offset: Int) -> Character {
+        self[index(startIndex, offsetBy: offset)]
+    }
+}
