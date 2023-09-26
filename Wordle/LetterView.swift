@@ -9,14 +9,15 @@ import SwiftUI
 
 struct LetterView : View {
     @ObservedObject var vm: WordleViewModel
-    var letter: WordleModel.WordleLetter
+    let letter: WordleModel.WordleLetter
     var  body: some View {
         Button {
             vm.letterTapped(letter)
         } label: {
             ZStack {
                 ZStack {
-                    letterText
+                    letterText.padding(0)
+
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(lineWidth: letter.isSelected ? 10 : 1)
                 }
@@ -30,7 +31,7 @@ struct LetterView : View {
                 .opacity(letter.isChecked ? 1 : 0)
             }
         }
-        .aspectRatio(1, contentMode: .fill)
+        .aspectRatio(1, contentMode: .fit)
         .disabled(letter.isDisabled)
         .rotationEffect(Angle(degrees: letter.rightPlace ? 0 : 360))
         .rotationEffect(Angle(degrees: letter.rightLetter ? 360 : 0))
@@ -40,18 +41,15 @@ struct LetterView : View {
         .animation(.easeInOut(duration: 0.5), value: letter.shake)
     }
     
-    var letterText: some View {
+    private var letterText: some View {
         Text(letter.letter)
             .font(.system(size: 800))
             .fontWeight(.bold)
             .minimumScaleFactor(0.01)
             .aspectRatio(1, contentMode: .fit)
             .foregroundColor(letter.isChecked ? .white : .primary)
-            .padding(5)
     }
 }
-
-
 
 
 struct LetterView_Previews: PreviewProvider {
