@@ -42,6 +42,24 @@ struct WordleModel {
         var wrongLetter = false
         
         var shake = false
+        
+        init(letter: String, id: Int) {
+            self.letter = letter
+            self.id = id
+        }
+        
+        // init for preview
+        init(letter: String, id: Int, isSelected: Bool, isDisabled: Bool, isChecked: Bool, rightPlace: Bool, rightLetter: Bool, wrongLetter: Bool, shake: Bool) {
+            self.letter = letter
+            self.id = id
+            self.isSelected = isSelected
+            self.isDisabled = isDisabled
+            self.isChecked = isChecked
+            self.rightPlace = rightPlace
+            self.rightLetter = rightLetter
+            self.wrongLetter = wrongLetter
+            self.shake = shake
+        }
     }
     
     mutating func newGame(numberOfLetters: Int, NumberOfRows: Int) {

@@ -106,6 +106,16 @@ class WordleViewModel: ObservableObject {
         }
     }
     
+    func resetStatistic() {
+        numberOfGames = 0
+        numberOfFirstTrys = 0
+        numberOfSecondTrys = 0
+        numberOfThirdTrys = 0
+        numberOFourthTrys = 0
+        numberOfFifthTrys = 0
+        numberOfSixthTrys = 0
+    }
+    
     private func updateStatistic(newGame: Bool) {
         if newGame {
             if won {return}
