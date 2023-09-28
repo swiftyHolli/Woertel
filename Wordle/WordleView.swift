@@ -9,17 +9,13 @@ import SwiftUI
 
 struct WordleView: View {
     @ObservedObject var vm: WordleViewModel
-    
+        
     var body: some View {
         VStack {
-            LazyVGrid(columns: gridItems(), spacing: 0) {
-                ForEach(vm.letters.indices, id:\.self) {index in
-                    LetterView(vm: vm, letter: vm.letters[index])
-                        .padding(3)
-                }
+            ZStack {
+                letterGrid
+                notInListFlyingText(show: vm.showNotInList)
             }
-            .aspectRatio(CGFloat(vm.numberOfLetters) / CGFloat(vm.numberOfRows), contentMode: .fit)
-            .padding()
             Spacer()
             Text(vm.won ? "gewonnen" : vm.word)
             KeyboardView(vm: vm)
@@ -38,7 +34,41 @@ struct WordleView: View {
         }
     }
     
-    func gridItems()->[GridItem] {
+    var letterGrid: some View {
+        LazyVGrid(columns: gridItems(), spacing: 0) {
+            ForEach(vm.letters.indices, id:\.self) {index in
+                LetterView(vm: vm, letter: vm.letters[index])
+                    .padding(3)
+            }
+        }
+        .aspectRatio(CGFloat(vm.numberOfLetters) / CGFloat(vm.numberOfRows), contentMode: .fit)
+        .padding()
+    }
+    
+    struct notInListFlyingText: View {
+        let show: Bool
+        @State private var offset: CGFloat = 0        
+        var body: some View {
+            if show {
+                Text("Wort nicht in der Liste")
+                    .font(.largeTitle)
+                    .foregroundColor(.orange)
+                    .shadow(color: .black, radius: 2, x: 1.5, y: 1.5)
+                    .offset(x: 0, y: offset)
+                    .opacity(offset != 0 ? 0 : 1)
+                    .onAppear {
+                        withAnimation(.easeIn(duration: WordleViewModel.Constants.ShowNotInListTime)) {
+                            offset = -200
+                        }
+                    }
+                    .onDisappear {
+                        offset = 0
+                    }
+            }
+        }
+    }
+        
+    private func gridItems()->[GridItem] {
         var items = [GridItem]()
         for _ in 0..<vm.numberOfLetters {
             items.append(GridItem(.adaptive(minimum: 800) ,spacing: 0))

@@ -40,7 +40,7 @@ struct WordleModel {
         var rightPlace = false
         var rightLetter = false
         var wrongLetter = false
-        
+                
         var shake = false
         
         init(letter: String, id: Int) {
@@ -60,6 +60,12 @@ struct WordleModel {
             self.wrongLetter = wrongLetter
             self.shake = shake
         }
+    }
+    
+    enum CheckResult {
+        case ok
+        case notFilled
+        case wordNotInList
     }
     
     mutating func newGame(numberOfLetters: Int, NumberOfRows: Int) {
@@ -113,9 +119,10 @@ struct WordleModel {
         }
     }
         
-    mutating func checkRow() {
+    mutating func checkRow()->CheckResult {
         var letter: WordleLetter
-        if !checkFilledWord() {return}
+        let result = checkFilledWord()
+        if result != .ok {return result}
         for index in actualRowIndizies() {
             if String(word[index % numberOfLetters]) == letterField[index].letter {
                 letterField[index].rightPlace = true
@@ -148,6 +155,7 @@ struct WordleModel {
         if !won {
             nextRow()
         }
+        return result
     }
     
     var won: Bool {
@@ -163,27 +171,31 @@ struct WordleModel {
         return false
     }
     
-    private mutating func checkFilledWord()->Bool {
-        var success = true
+    private mutating func checkFilledWord()->CheckResult {
+        var result = CheckResult.ok
         var wordToCheck = ""
         for letter in actualRowLetters() {
             wordToCheck = wordToCheck + letter.letter
             if letter.letter == "" {
-                success = false
+                result = .notFilled
                 break
             }
         }
         
         if !words.contains(where: {$0.uppercased() == wordToCheck}) {
-            success = false
+            result = .wordNotInList
         }
 
-        if !success {
+        if result == .notFilled {
             for index in actualRowIndizies() {
                 letterField[index].shake.toggle()
             }
         }
-        return success
+        
+        else if result == .wordNotInList {
+            setSelectedLetter(id: actualRow * numberOfLetters)
+        }
+        return result
     }
     
     mutating private func nextRow() {

@@ -14,6 +14,7 @@ struct KeyboardLetter: View {
     var body: some View {
         Button {
             vm.keyPressed(letter)
+            vm.showNotInList = false
         } label: {
             Text(letter.letter)
                 .font(.system(size: 800))

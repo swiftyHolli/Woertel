@@ -32,13 +32,19 @@ struct WordleColors {
 
 
 class WordleViewModel: ObservableObject {
+    
+    struct Constants {
+        static let ShowNotInListTime = 1.5
+    }
+
     let numberOfLetters = 5
     let numberOfRows = 6
     
     @Published private var model: WordleModel
     @Published var showStatistics = false
     @Published var showSettings = false
-    
+    @Published var showNotInList = false
+
     @AppStorage("totalGames") var numberOfGames: Int = 0
     @AppStorage("firstTry") var numberOfFirstTrys: Int = 0
     @AppStorage("secondTry") var numberOfSecondTrys: Int = 0
@@ -46,9 +52,10 @@ class WordleViewModel: ObservableObject {
     @AppStorage("fourthTry") var numberOFourthTrys: Int = 0
     @AppStorage("fifthTry") var numberOfFifthTrys: Int = 0
     @AppStorage("sixthTry") var numberOfSixthTrys: Int = 0
-
+    
     init() {
         model = WordleModel(numberOfLetters: numberOfLetters, NumberOfRows: numberOfRows)
+        showNotInList = false
     }
     
     var letters: [WordleModel.WordleLetter] {
@@ -58,7 +65,7 @@ class WordleViewModel: ObservableObject {
     var word: String {
         return model.word
     }
-    
+        
     var won: Bool {
         return model.won
     }
@@ -70,7 +77,7 @@ class WordleViewModel: ObservableObject {
     var enableNewGame: Bool {
         return model.actualRow > 0 || model.won
     }
-
+    
     func letterTapped(_ letter: WordleModel.WordleLetter) {
         model.setSelectedLetter(id: letter.id)
     }
@@ -97,11 +104,17 @@ class WordleViewModel: ObservableObject {
     }
     
     func check() {
-        model.checkRow()
+        let result = model.checkRow()
         updateStatistic(newGame: false)
         if model.won {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 * Double(numberOfLetters)) { [weak self] in
                 self?.showStatistics.toggle()
+            }
+        }
+        if result == .wordNotInList {
+            showNotInList = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + Constants.ShowNotInListTime) {[weak self] in
+                self?.showNotInList = false
             }
         }
     }

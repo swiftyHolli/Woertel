@@ -39,6 +39,8 @@ struct LetterView : View {
         .animation(.easeInOut(duration: 0.5).delay(0.5 * Double(vm.numberOfLetters) + 0.1 * Double(letter.id % vm.numberOfLetters)), value: letter.isDisabled)
         .modifier(ShakeEffect(shakes: letter.shake ? 1 : 0))
         .animation(.easeInOut(duration: 0.5), value: letter.shake)
+        .animation(.easeInOut(duration: 0.1).delay(WordleViewModel.Constants.ShowNotInListTime), value: letter.isSelected && vm.showNotInList)
+        .animation(.easeInOut(duration: 0.1), value: letter.isSelected)
     }
     
     private var letterText: some View {
@@ -50,6 +52,7 @@ struct LetterView : View {
             .foregroundColor(letter.isChecked ? .white : .primary)
     }
 }
+
 
 
 struct LetterView_Previews: PreviewProvider {
