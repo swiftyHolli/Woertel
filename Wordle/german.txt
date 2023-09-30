@@ -825,18 +825,14 @@ Madam
 Mafia
 Magen
 Mager
-Maggi
 Magie
 Magma
-Magna
 Major
 Makel
-Maker
 Makro
 Malen
 Maler
 Malta
-Malus
 Mamba
 Mambo
 Manga
@@ -857,7 +853,6 @@ Matte
 Mauer
 Medea
 Meise
-Meist
 Mekka
 Memme
 Menge
@@ -867,8 +862,6 @@ Messi
 Meter
 Metro
 Meute
-Miami
-Micro
 Miene
 Miere
 Miete
