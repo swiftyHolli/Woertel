@@ -7,12 +7,28 @@
 
 import SwiftUI
 
-struct SolutionView: View {
+struct SolutionView : View {
+    @ObservedObject var vm: WordleViewModel
+    let text: String
+    let show: Bool
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text(text)
+            .font(.largeTitle)
+            .fontWeight(.semibold)
+            .foregroundColor(.white)
+            .padding(.horizontal)
+            .background{
+                LinearGradient(colors: [Color(uiColor: #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1)),Color(uiColor: #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)), Color(uiColor: #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1))], startPoint: .topTrailing, endPoint: .bottomLeading)
+            }
+            .clipShape(.capsule)
+            .opacity(show ? 1 : 0)
+            .scaleEffect(CGSize(width: show ? 1 : 0, height: show ? 1 : 0))
+            .animation(.spring(bounce: 0.8).delay(vm.lostAnimationDuration()), value: show)
     }
 }
 
-#Preview {
-    SolutionView()
+struct SolutionView_Previews: PreviewProvider {
+    static var previews: some View {
+        SolutionView(vm: WordleViewModel(), text: "Adler", show: true)
+    }
 }

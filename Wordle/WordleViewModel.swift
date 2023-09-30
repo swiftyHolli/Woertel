@@ -35,10 +35,15 @@ class WordleViewModel: ObservableObject {
     
     struct Constants {
         static let ShowNotInListTime = 1.5
+        static let checkDuration = 0.5
+        static let selectDuration = 0.1
+        static let lostAnimationDuration = 1.0
     }
+    
+
 
     let numberOfLetters = 5
-    let numberOfRows = 6
+    let numberOfRows = 2
     
     @Published private var model: WordleModel
     @Published var showStatistics = false
@@ -70,10 +75,18 @@ class WordleViewModel: ObservableObject {
         return model.won
     }
     
+    var lost: Bool {
+        return model.lost
+    }
+    
     var keys: [WordleModel.WordleLetter] {
         return model.keyboardField
     }
-        
+    
+    var enableNewGame: Bool {
+        return model.actualRow > 0 || model.won
+    }
+    
     func letterTapped(_ letter: WordleModel.WordleLetter) {
         model.setSelectedLetter(id: letter.id)
     }
@@ -95,15 +108,21 @@ class WordleViewModel: ObservableObject {
         var transaction = Transaction(animation: .easeInOut(duration: 0.5))
         transaction.disablesAnimations = true
         withTransaction(transaction) {
-            model.newGame(numberOfLetters: 5, NumberOfRows: 6)
+            model.newGame(numberOfLetters: numberOfLetters, NumberOfRows: numberOfRows)
+        }
+    }
+    
+    func statisticsDismissed() {
+        if won {
+            newGame()
         }
     }
     
     func check() {
         let result = model.checkRow()
-        updateStatistic(newGame: false)
         if model.won {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 * Double(numberOfLetters)) { [weak self] in
+            updateStatistic(newGame: false)
+            DispatchQueue.main.asyncAfter(deadline: .now() + rowCheckDuration()) { [weak self] in
                 self?.showStatistics.toggle()
             }
         }
@@ -111,6 +130,11 @@ class WordleViewModel: ObservableObject {
             showNotInList = true
             DispatchQueue.main.asyncAfter(deadline: .now() + Constants.ShowNotInListTime) {[weak self] in
                 self?.showNotInList = false
+            }
+        }
+        if model.lost {
+            DispatchQueue.main.asyncAfter(deadline: .now() + rowCheckDuration() + Constants.lostAnimationDuration) {[weak self] in
+                self?.model.setLetterFieldLostFlag(false)
             }
         }
     }
@@ -149,5 +173,18 @@ class WordleViewModel: ObservableObject {
                 print("error in statistic")
             }
         }
+    }
+    
+    func rowCheckDuration()->TimeInterval {
+        return Constants.checkDuration * Double(numberOfLetters)
+    }
+    func lostAnimationDuration()->TimeInterval {
+        return Constants.checkDuration * Double(numberOfLetters) + Constants.lostAnimationDuration
+    }
+    func checkDelay(id: Int)->TimeInterval {
+        return Constants.checkDuration * Double(id % numberOfLetters)
+    }
+    func rowSelectDuration()->TimeInterval {
+        return Constants.selectDuration * Double(numberOfLetters)
     }
 }

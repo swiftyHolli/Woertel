@@ -17,14 +17,16 @@ struct WordleView: View {
                 notInListFlyingText(show: vm.showNotInList)
             }
             Spacer()
-            Text(vm.won ? "gewonnen" : vm.word)
+                Text(vm.won ? "gewonnen" : vm.word)
             KeyboardView(vm: vm)
         }
         .background {
             LinearGradient(colors: [Color(uiColor: #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1)),Color(uiColor: #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)), Color(uiColor: #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1))], startPoint: .topLeading, endPoint:.bottomTrailing )
                 .ignoresSafeArea()
         }
-        .sheet(isPresented: $vm.showStatistics) {
+        .sheet(isPresented: $vm.showStatistics, onDismiss: {
+            vm.statisticsDismissed()
+        }) {
             StatisticsView()
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
@@ -43,6 +45,9 @@ struct WordleView: View {
         }
         .aspectRatio(CGFloat(vm.numberOfLetters) / CGFloat(vm.numberOfRows), contentMode: .fit)
         .padding()
+        .overlay(alignment: .center) {
+            SolutionView(vm: vm, text: vm.word, show: vm.lost)
+        }
     }
     
     struct notInListFlyingText: View {
@@ -52,6 +57,7 @@ struct WordleView: View {
             if show {
                 Text("Wort nicht in der Liste")
                     .font(.largeTitle)
+                    .fontWeight(.semibold)
                     .foregroundColor(.orange)
                     .shadow(color: .black, radius: 2, x: 1.5, y: 1.5)
                     .offset(x: 0, y: offset)
@@ -67,7 +73,7 @@ struct WordleView: View {
             }
         }
     }
-        
+            
     private func gridItems()->[GridItem] {
         var items = [GridItem]()
         for _ in 0..<vm.numberOfLetters {

@@ -78,7 +78,7 @@ struct KeyboardView: View {
                 }
                 .padding()
                 Button {
-                    if !vm.won {
+                    if !vm.won && !vm.lost{
                         showingAlert = true
                     }
                     else {
@@ -104,12 +104,12 @@ struct KeyboardView: View {
                     Text("\(Image(systemName: "checkmark"))")
                         .font(.largeTitle)
                         .fontWeight(.semibold)
-                        .foregroundColor(vm.won ? .gray : .white)
+                        .foregroundColor(vm.won || vm.lost ? .gray : .white)
                         .frame(maxWidth: 300)
                         .background(LinearGradient(colors: [.blue, .black], startPoint: .top, endPoint:.bottom ))
                         .clipShape(Capsule())
                 }
-                .disabled(vm.won)
+                .disabled(vm.won || vm.lost)
             }
             .padding(.horizontal)
             VStack(spacing: 0) {

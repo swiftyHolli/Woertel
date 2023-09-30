@@ -42,6 +42,7 @@ struct WordleModel {
         var wrongLetter = false
                 
         var shake = false
+        var isPartOfLostGame = false
         
         init(letter: String, id: Int) {
             self.letter = letter
@@ -71,7 +72,7 @@ struct WordleModel {
     mutating func newGame(numberOfLetters: Int, NumberOfRows: Int) {
         self.numberOfLetters = numberOfLetters
         self.numberOfRows = NumberOfRows
-        
+        lost = false
         letterField = []
         for index in 0..<numberOfLetters * NumberOfRows{
             letterField.append(WordleLetter(letter: "", id: index))
@@ -171,6 +172,18 @@ struct WordleModel {
         return false
     }
     
+    var lost = false {
+        didSet {
+            setLetterFieldLostFlag(true)
+        }
+    }
+    
+    mutating func setLetterFieldLostFlag(_ lost: Bool) {
+        for index in 0..<letterField.count {
+            letterField[index].isPartOfLostGame = lost
+        }
+    }
+    
     private mutating func checkFilledWord()->CheckResult {
         var result = CheckResult.ok
         var wordToCheck = ""
@@ -199,6 +212,10 @@ struct WordleModel {
     }
     
     mutating private func nextRow() {
+        if actualRow == numberOfRows - 1 {
+            lost = true
+            return
+        }
         actualRow += actualRow < numberOfRows - 1 ? 1 : 0
         let indizies = actualRowIndizies()
         for index in indizies {
