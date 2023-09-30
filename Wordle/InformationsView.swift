@@ -1,5 +1,5 @@
 //
-//  SettingsView.swift
+//  InformationsView.swift
 //  Wordle MVVM
 //
 //  Created by Holger Becker on 24.09.23.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SettingsView: View {
+struct InformationsView: View {
     @ObservedObject var vm: WordleViewModel
     var body: some View {
         VStack(spacing: 100) {
@@ -23,6 +23,6 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(vm: WordleViewModel())
+        InformationsView(vm: WordleViewModel())
     }
 }
