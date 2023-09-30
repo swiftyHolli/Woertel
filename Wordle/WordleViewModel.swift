@@ -73,11 +73,7 @@ class WordleViewModel: ObservableObject {
     var keys: [WordleModel.WordleLetter] {
         return model.keyboardField
     }
-    
-    var enableNewGame: Bool {
-        return model.actualRow > 0 || model.won
-    }
-    
+        
     func letterTapped(_ letter: WordleModel.WordleLetter) {
         model.setSelectedLetter(id: letter.id)
     }
