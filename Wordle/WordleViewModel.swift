@@ -40,10 +40,23 @@ class WordleViewModel: ObservableObject {
         static let lostAnimationDuration = 1.0
     }
     
+    func rowCheckDuration()->TimeInterval {
+        return Constants.checkDuration * Double(numberOfLetters)
+    }
+    func lostAnimationDuration()->TimeInterval {
+        return Constants.checkDuration * Double(numberOfLetters) + Constants.lostAnimationDuration * 2
+    }
+    func checkDelay(id: Int)->TimeInterval {
+        return Constants.checkDuration * Double(id % numberOfLetters)
+    }
+    func rowSelectDuration()->TimeInterval {
+        return Constants.selectDuration * Double(numberOfLetters)
+    }
+
 
 
     let numberOfLetters = 5
-    let numberOfRows = 2
+    let numberOfRows = 6
     
     @Published private var model: WordleModel
     @Published var showStatistics = false
@@ -57,7 +70,10 @@ class WordleViewModel: ObservableObject {
     @AppStorage("fourthTry") var numberOFourthTrys: Int = 0
     @AppStorage("fifthTry") var numberOfFifthTrys: Int = 0
     @AppStorage("sixthTry") var numberOfSixthTrys: Int = 0
-    
+    @AppStorage("series") var series: Int = 0
+    @AppStorage("bestSeries") var bestSeries: Int = 0
+    @AppStorage("lastgameWasWon") var lastGameWasWon: Bool = false
+
     init() {
         model = WordleModel(numberOfLetters: numberOfLetters, NumberOfRows: numberOfRows)
         showNotInList = false
@@ -147,6 +163,9 @@ class WordleViewModel: ObservableObject {
         numberOFourthTrys = 0
         numberOfFifthTrys = 0
         numberOfSixthTrys = 0
+        series = 0
+        bestSeries = 0
+        lastGameWasWon = false
     }
     
     private func updateStatistic(newGame: Bool) {
@@ -172,19 +191,63 @@ class WordleViewModel: ObservableObject {
             default:
                 print("error in statistic")
             }
+            if lastGameWasWon {
+                series += series == 0 ? 2 : 1
+                if series > bestSeries {
+                    bestSeries = series
+                }
+            }
+            lastGameWasWon = true
+        }
+        else {
+            lastGameWasWon = false
+            series = 0
         }
     }
     
-    func rowCheckDuration()->TimeInterval {
-        return Constants.checkDuration * Double(numberOfLetters)
+    enum RowType {
+        case allRightPlace
+        case allWrong
+        case rightPlaceAndLetter
+        case oneRightPlace
+        case oneRightLetter
     }
-    func lostAnimationDuration()->TimeInterval {
-        return Constants.checkDuration * Double(numberOfLetters) + Constants.lostAnimationDuration
-    }
-    func checkDelay(id: Int)->TimeInterval {
-        return Constants.checkDuration * Double(id % numberOfLetters)
-    }
-    func rowSelectDuration()->TimeInterval {
-        return Constants.selectDuration * Double(numberOfLetters)
+    
+    func letterRow(type: RowType)->[WordleModel.WordleLetter] {
+        var row = [WordleModel.WordleLetter]()
+        switch type {
+        case .allRightPlace:
+            row.append(WordleModel.WordleLetter(letter: "A", id: 0, rightPlace: true, rightLetter: false, wrongLetter: false))
+            row.append(WordleModel.WordleLetter(letter: "D", id: 1, rightPlace: true, rightLetter: false, wrongLetter: false))
+            row.append(WordleModel.WordleLetter(letter: "L", id: 2, rightPlace: true, rightLetter: false, wrongLetter: false))
+            row.append(WordleModel.WordleLetter(letter: "E", id: 3, rightPlace: true, rightLetter: false, wrongLetter: false))
+            row.append(WordleModel.WordleLetter(letter: "R", id: 4, rightPlace: true, rightLetter: false, wrongLetter: false))
+        case .allWrong:
+            row.append(WordleModel.WordleLetter(letter: "U", id: 0, rightPlace: false, rightLetter: false, wrongLetter: true))
+            row.append(WordleModel.WordleLetter(letter: "N", id: 1, rightPlace: false, rightLetter: false, wrongLetter: true))
+            row.append(WordleModel.WordleLetter(letter: "I", id: 2, rightPlace: false, rightLetter: false, wrongLetter: true))
+            row.append(WordleModel.WordleLetter(letter: "O", id: 3, rightPlace: false, rightLetter: false, wrongLetter: true))
+            row.append(WordleModel.WordleLetter(letter: "N", id: 4, rightPlace: false, rightLetter: false, wrongLetter: true))
+        case .rightPlaceAndLetter:
+            row.append(WordleModel.WordleLetter(letter: "A", id: 0, rightPlace: true, rightLetter: false, wrongLetter: false))
+            row.append(WordleModel.WordleLetter(letter: "R", id: 1, rightPlace: false, rightLetter: true, wrongLetter: false))
+            row.append(WordleModel.WordleLetter(letter: "G", id: 2, rightPlace: false, rightLetter: false, wrongLetter: true))
+            row.append(WordleModel.WordleLetter(letter: "O", id: 3, rightPlace: false, rightLetter: false, wrongLetter: true))
+            row.append(WordleModel.WordleLetter(letter: "N", id: 4, rightPlace: false, rightLetter: false , wrongLetter: true))
+        case .oneRightPlace:
+            row.append(WordleModel.WordleLetter(letter: "A", id: 0, rightPlace: true, rightLetter: false, wrongLetter: false))
+            row.append(WordleModel.WordleLetter(letter: "N", id: 1, rightPlace: false, rightLetter: false, wrongLetter: true))
+            row.append(WordleModel.WordleLetter(letter: "T", id: 2, rightPlace: false, rightLetter: false, wrongLetter: true))
+            row.append(WordleModel.WordleLetter(letter: "I", id: 3, rightPlace: false, rightLetter: false, wrongLetter: true))
+            row.append(WordleModel.WordleLetter(letter: "K", id: 4, rightPlace: false, rightLetter: false, wrongLetter: true))
+        case .oneRightLetter:
+            row.append(WordleModel.WordleLetter(letter: "K", id: 0, rightPlace: false, rightLetter: false, wrongLetter: true))
+            row.append(WordleModel.WordleLetter(letter: "L", id: 1, rightPlace: false, rightLetter: true, wrongLetter: false))
+            row.append(WordleModel.WordleLetter(letter: "A", id: 2, rightPlace: false, rightLetter: true, wrongLetter: false))
+            row.append(WordleModel.WordleLetter(letter: "N", id: 3, rightPlace: false, rightLetter: false, wrongLetter: true))
+            row.append(WordleModel.WordleLetter(letter: "G", id: 4, rightPlace: false, rightLetter: false, wrongLetter: true))
+
+        }
+        return row
     }
 }

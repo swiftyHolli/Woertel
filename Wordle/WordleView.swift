@@ -32,7 +32,7 @@ struct WordleView: View {
                 .presentationDragIndicator(.visible)
         }
         .fullScreenCover(isPresented: $vm.showSettings) {
-            SettingsView(vm: vm)
+            InformationsView(vm: vm)
         }
     }
     
@@ -52,13 +52,14 @@ struct WordleView: View {
     
     struct notInListFlyingText: View {
         let show: Bool
-        @State private var offset: CGFloat = 0        
+        let color = Color(uiColor: #colorLiteral(red: 0.9994240403, green: 0.9855536819, blue: 0, alpha: 1))
+        @State private var offset: CGFloat = 0
         var body: some View {
             if show {
-                Text("Wort nicht in der Liste")
+                Text("Wort nicht in der Liste!")
                     .font(.largeTitle)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.orange)
+                    .fontWeight(.bold)
+                    .foregroundColor(color)
                     .shadow(color: .black, radius: 2, x: 1.5, y: 1.5)
                     .offset(x: 0, y: offset)
                     .opacity(offset != 0 ? 0 : 1)

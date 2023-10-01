@@ -29,7 +29,7 @@ struct WordleModel {
         newGame(numberOfLetters: numberOfLetters, NumberOfRows: NumberOfRows)
     }
     
-    struct WordleLetter {
+    struct WordleLetter: Identifiable {
         var letter: String
         var id: Int
         
@@ -60,6 +60,15 @@ struct WordleModel {
             self.rightLetter = rightLetter
             self.wrongLetter = wrongLetter
             self.shake = shake
+        }
+        //init for help screen
+        init(letter: String, id: Int, rightPlace: Bool, rightLetter: Bool, wrongLetter: Bool) {
+            self.letter = letter
+            self.id = id
+            self.isChecked = true
+            self.rightPlace = rightPlace
+            self.rightLetter = rightLetter
+            self.wrongLetter = wrongLetter
         }
     }
     

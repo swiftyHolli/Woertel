@@ -48,8 +48,8 @@ struct LetterView : View {
             .delay(Constants.ShowNotInListTime), value: letter.isSelected && vm.showNotInList)
         .animation(.easeInOut(duration: Constants.selectDuration), value: letter.isSelected)
         .offset(
-            x: letter.isPartOfLostGame ? CGFloat.random(in: -1000...1000) : 0,
-            y: letter.isPartOfLostGame ? CGFloat.random(in: -1000...1000) : 0
+            x: letter.isPartOfLostGame ? CGFloat.random(in: -500...500) : 0,
+            y: letter.isPartOfLostGame ? CGFloat.random(in: -500...500) : 0
         )
         .opacity(letter.isPartOfLostGame ? 0 : 1)
         .animation(

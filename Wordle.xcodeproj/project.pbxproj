@@ -15,7 +15,7 @@
 		3084A1D22AC36B4E00DC8BF9 /* WordleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3084A1D12AC36B4E00DC8BF9 /* WordleView.swift */; };
 		3084A1D42AC36B8200DC8BF9 /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3084A1D32AC36B8200DC8BF9 /* KeyboardView.swift */; };
 		3084A1D62AC36BAC00DC8BF9 /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3084A1D52AC36BAC00DC8BF9 /* StatisticsView.swift */; };
-		3084A1D82AC36BE200DC8BF9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3084A1D72AC36BE200DC8BF9 /* SettingsView.swift */; };
+		3084A1D82AC36BE200DC8BF9 /* InformationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3084A1D72AC36BE200DC8BF9 /* InformationsView.swift */; };
 		3084A1DA2AC36C2000DC8BF9 /* WordleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3084A1D92AC36C2000DC8BF9 /* WordleViewModel.swift */; };
 		3084A1DC2AC36C4900DC8BF9 /* WordleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3084A1DB2AC36C4900DC8BF9 /* WordleModel.swift */; };
 		3084A1DE2AC36D2600DC8BF9 /* Effects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3084A1DD2AC36D2600DC8BF9 /* Effects.swift */; };
@@ -32,7 +32,7 @@
 		3084A1D12AC36B4E00DC8BF9 /* WordleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordleView.swift; sourceTree = "<group>"; };
 		3084A1D32AC36B8200DC8BF9 /* KeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardView.swift; sourceTree = "<group>"; };
 		3084A1D52AC36BAC00DC8BF9 /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
-		3084A1D72AC36BE200DC8BF9 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		3084A1D72AC36BE200DC8BF9 /* InformationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationsView.swift; sourceTree = "<group>"; };
 		3084A1D92AC36C2000DC8BF9 /* WordleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordleViewModel.swift; sourceTree = "<group>"; };
 		3084A1DB2AC36C4900DC8BF9 /* WordleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordleModel.swift; sourceTree = "<group>"; };
 		3084A1DD2AC36D2600DC8BF9 /* Effects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effects.swift; sourceTree = "<group>"; };
@@ -74,7 +74,7 @@
 				3084A1DF2AC377EF00DC8BF9 /* LetterView.swift */,
 				3084A1D32AC36B8200DC8BF9 /* KeyboardView.swift */,
 				3084A1D52AC36BAC00DC8BF9 /* StatisticsView.swift */,
-				3084A1D72AC36BE200DC8BF9 /* SettingsView.swift */,
+				3084A1D72AC36BE200DC8BF9 /* InformationsView.swift */,
 				3079086B2AC8415C00315D13 /* SolutionView.swift */,
 				3084A1D92AC36C2000DC8BF9 /* WordleViewModel.swift */,
 				3084A1DB2AC36C4900DC8BF9 /* WordleModel.swift */,
@@ -122,7 +122,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					30415B472AACC318009956DD = {
 						CreatedOnToolsVersion = 14.3.1;
@@ -168,7 +168,7 @@
 			files = (
 				3084A1DE2AC36D2600DC8BF9 /* Effects.swift in Sources */,
 				3084A1E02AC377EF00DC8BF9 /* LetterView.swift in Sources */,
-				3084A1D82AC36BE200DC8BF9 /* SettingsView.swift in Sources */,
+				3084A1D82AC36BE200DC8BF9 /* InformationsView.swift in Sources */,
 				3084A1D42AC36B8200DC8BF9 /* KeyboardView.swift in Sources */,
 				3084A1D62AC36BAC00DC8BF9 /* StatisticsView.swift in Sources */,
 				3084A1D02AC36AE500DC8BF9 /* WordleApp.swift in Sources */,
@@ -218,6 +218,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -278,6 +279,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
