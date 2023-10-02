@@ -40,6 +40,38 @@ class WordleViewModel: ObservableObject {
         static let lostAnimationDuration = 1.0
     }
     
+    struct DeviceGeometry {
+        var isIpad = false
+        var deviceWidth: CGFloat = 0
+        var deviceHeight: CGFloat = 0
+        
+        init() {
+            setDeviceDimensions()
+        }
+        
+        var infoViewWidth: CGFloat {
+            return deviceWidth * (isIpad ? 0.8 : 1.0)
+        }
+        var infoViewHeight: CGFloat {
+            return deviceHeight * (isIpad ? 0.5 : 0.7)
+        }
+        var infoPageWidth: CGFloat {
+            return deviceWidth * (isIpad ? 0.8 : 1.0) - 10
+        }
+        var infoPageLettersWidth: CGFloat {
+            return deviceWidth * (isIpad ? 0.5 : 0.8)
+        }
+        var dotsOffset: CGFloat {
+            return -(deviceHeight - infoViewHeight - 100)
+        }
+
+        mutating func setDeviceDimensions() {
+            deviceWidth = UIScreen.main.bounds.size.width
+            deviceHeight = UIScreen.main.bounds.size.height
+            isIpad = UIDevice.current.userInterfaceIdiom == .pad
+        }
+    }
+    
     func rowCheckDuration()->TimeInterval {
         return Constants.checkDuration * Double(numberOfLetters)
     }
@@ -62,6 +94,7 @@ class WordleViewModel: ObservableObject {
     @Published var showStatistics = false
     @Published var showSettings = false
     @Published var showNotInList = false
+    @Published var deviceGeometry = DeviceGeometry()
 
     @AppStorage("totalGames") var numberOfGames: Int = 0
     @AppStorage("firstTry") var numberOfFirstTrys: Int = 0
