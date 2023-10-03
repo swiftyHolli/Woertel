@@ -41,7 +41,8 @@ struct InformationsView: View {
             Text("Spielanleitung")
                 .font(.largeTitle)
                 .fontWeight(.bold)
-                .frame(width: vm.deviceGeometry.infoViewWidth - 50, height: 100)
+                .frame(width: vm.deviceGeometry.infoViewHeaderWidth,
+                       height: vm.deviceGeometry.infoViewHeaderHeight)
                 .background{
                     LinearGradient(colors: [Color(uiColor: #colorLiteral(red: 0.9440218806, green: 0.5319081545, blue: 0.1445603669, alpha: 1)), Color(uiColor: #colorLiteral(red: 0.9994240403, green: 0.9855536819, blue: 0, alpha: 1))], startPoint: .top, endPoint: .bottom)
                 }
@@ -62,7 +63,7 @@ struct InformationsView: View {
                 }
                 
             })
-            .offset(x: (vm.deviceGeometry.infoViewWidth - 120) / 2, y: -vm.deviceGeometry.infoViewHeight / 2 - 40)
+            .offset(vm.deviceGeometry.infoViewCloseButtonOffset)
         }
         .zIndex(2)
     }

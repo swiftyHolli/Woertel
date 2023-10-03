@@ -64,6 +64,21 @@ class WordleViewModel: ObservableObject {
         var dotsOffset: CGFloat {
             return -(deviceHeight - infoViewHeight - 100)
         }
+        var infoViewHeaderWidth: CGFloat {
+            return infoViewWidth - infoPageCornerRadius * 2
+        }
+        var infoPageCornerRadius: CGFloat {
+            return 25
+        }
+        var infoViewHeaderHeight: CGFloat {
+            return isIpad ? 100 : 80
+        }
+        var infoViewCloseButtonOffset: CGSize {
+            let size = CGSize(width: (infoViewWidth - 120) / 2,
+                              height: -infoViewHeight / 2 - 40)
+            return size
+        }
+        
 
         mutating func setDeviceDimensions() {
             deviceWidth = UIScreen.main.bounds.size.width

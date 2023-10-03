@@ -13,10 +13,10 @@ struct SolutionView : View {
     let show: Bool
     var body: some View {
         Text(text)
-            .font(.largeTitle)
-            .fontWeight(.semibold)
+            .font(.system(size: vm.deviceGeometry.isIpad ? 100 : 50, weight: .semibold, design: .rounded))
             .foregroundColor(.white)
-            .padding(.horizontal)
+            .padding(.horizontal, vm.deviceGeometry.isIpad ? 50 : 25)
+            .padding(.vertical, vm.deviceGeometry.isIpad ? 30 : 15)
             .background{
                 LinearGradient(colors: [Color(uiColor: #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1)),Color(uiColor: #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)), Color(uiColor: #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1))], startPoint: .topTrailing, endPoint: .bottomLeading)
             }

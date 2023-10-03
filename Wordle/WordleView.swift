@@ -9,6 +9,7 @@ import SwiftUI
 
 struct WordleView: View {
     @ObservedObject var vm: WordleViewModel
+    @State var cheating = false
         
     var body: some View {
         VStack {
@@ -17,7 +18,10 @@ struct WordleView: View {
                 notInListFlyingText(show: vm.showNotInList)
             }
             Spacer()
-                Text(vm.won ? "gewonnen" : vm.word)
+            Text(cheating ? vm.word : "Zeigen")
+                .onTapGesture(perform: {
+                    cheating.toggle()
+                })
             KeyboardView(vm: vm)
         }
         .background {
