@@ -86,44 +86,46 @@ struct StatisticsView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 5))
             }
             .padding()
-            VStack(spacing: 0) {
-                Text("Anzahl der Versuche")
-                    .font(.callout)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                GeometryReader { geometry in
-                HStack {
-                    ForEach(0..<statisticsViewModel.statistics.count, id: \.self) {index in
-                        let percentValue = statisticsViewModel.statistics[index]
-                        let percentValueString = String(format: "%.0f", percentValue * 100)
-                        let drawPercentValue = statisticsViewModel.multiplier * percentValue
-                            VStack(spacing: 0) {
-                                Spacer(minLength: 0)
-                                Text("\(percentValueString)%")
-                                    .font(.body)
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                    .foregroundColor(.white)
-                                RoundedRectangle(cornerRadius: 5.0)
-                                    .fill(Color.red)
-                                    .frame(height: abs(geometry.size.height - 60) * max(CGFloat(drawPercentValue) , 0.01))
-                                    .shadow(color: .black, radius: 2, x: 3, y: 3)
-                                Text(index == 6 ? "X" : "\(index + 1)")
-                                    .font(.headline)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.top, 5)
-                                    .padding(.bottom, 10)
-                            }
-                        }
-                }.padding(.horizontal)
-                }
-            }
+            ChartView(charViewModel: ChartViewModel())
+//            VStack(spacing: 0) {
+//                Text("Anzahl der Versuche")
+//                    .font(.callout)
+//                    .fontWeight(.semibold)
+//                    .foregroundColor(.white)
+//                GeometryReader { geometry in
+//                HStack {
+//                    ForEach(0..<statisticsViewModel.statistics.count, id: \.self) {index in
+//                        let percentValue = statisticsViewModel.statistics[index]
+//                        let percentValueString = String(format: "%.0f", percentValue * 100)
+//                        let drawPercentValue = statisticsViewModel.multiplier * percentValue
+//                            VStack(spacing: 0) {
+//                                Spacer(minLength: 0)
+//                                Text("\(percentValueString)%")
+//                                    .font(.body)
+//                                    .frame(maxWidth: .infinity, alignment: .center)
+//                                    .foregroundColor(.white)
+//                                RoundedRectangle(cornerRadius: 5.0)
+//                                    .fill(Color.red)
+//                                    .frame(height: abs(geometry.size.height - 60) * max(CGFloat(drawPercentValue) , 0.01))
+//                                    .shadow(color: .black, radius: 2, x: 3, y: 3)
+//                                Text(index == 6 ? "X" : "\(index + 1)")
+//                                    .font(.headline)
+//                                    .fontWeight(.semibold)
+//                                    .foregroundColor(.white)
+//                                    .frame(maxWidth: .infinity)
+//                                    .padding(.top, 5)
+//                                    .padding(.bottom, 10)
+//                            }
+//                        }
+//                }.padding(.horizontal)
+//                }
+//            }
         }
         .background (
             LinearGradient(colors: [Color(uiColor: #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1)),Color(uiColor: #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)), Color(uiColor: #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1))], startPoint: .topLeading, endPoint:.bottomTrailing )
                 .ignoresSafeArea()        )
     }
+    
     
     struct ResultField: View {
         var name: String
