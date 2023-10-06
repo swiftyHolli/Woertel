@@ -7,18 +7,11 @@
 
 import SwiftUI
 
-class StatisticDataModel: ObservableObject {
+class StatisticsDataModel: ObservableObject {
     @Published var totalNumberOfGames = 0
     @Published var numberOfLostGames = 0
     @Published var numberOfWonGames = 0
     @Published var numberOfWonGamesPercent = 0.0
-    @Published var firstTry: Float = 0
-    @Published var secondTry: Float = 0
-    @Published var thirdTry: Float = 0
-    @Published var fourthTry: Float = 0
-    @Published var firthTry: Float = 0
-    @Published var sixthTry: Float = 0
-    @Published var multiplier: Float = 1.0
     
     @Published var statistics = [Float]()
 
@@ -32,9 +25,50 @@ class StatisticDataModel: ObservableObject {
     @AppStorage("series") var series: Int = 0
     @AppStorage("bestSeries") var bestSeries: Int = 0
 
+    struct SuccessfulTry: Identifiable {
+        var id: String { return name }
+        
+        var name: String
+        var percentValue: Double
+        var value: Int
+    }
+    
+    @Published var chartData = [SuccessfulTry]()
     
     init() {
         loadStatistics()
+        loadChardData()
+    }
+    
+    private func loadChardData() {
+        chartData = [
+            SuccessfulTry(name: "1", 
+                          percentValue: Double(numberOfFirstTrys) / Double(numberOfGames) * 100,
+                          value: numberOfFirstTrys),
+            SuccessfulTry(name: "2",
+                          percentValue: Double(numberOfSecondTrys) / Double(numberOfGames) * 100,
+                          value: numberOfSecondTrys),
+            SuccessfulTry(name: "3",
+                          percentValue: Double(numberOfThirdTrys) / Double(numberOfGames) * 100,
+                          value: numberOfThirdTrys),
+            SuccessfulTry(name: "4",
+                          percentValue: Double(numberOFourthTrys) / Double(numberOfGames) * 100,
+                          value: numberOFourthTrys),
+            SuccessfulTry(name: "5",
+                          percentValue: Double(numberOfFifthTrys) / Double(numberOfGames) * 100,
+                          value: numberOfFifthTrys),
+            SuccessfulTry(name: "6",
+                          percentValue: Double(numberOfSixthTrys) / Double(numberOfGames) * 100,
+                          value: numberOfSixthTrys),
+            SuccessfulTry(name: "X",
+                          percentValue: Double(numberOfLostGames) / Double(numberOfGames) * 100,
+                          value: numberOfLostGames)
+        ]
+        for (index, successfulTry) in chartData.enumerated() {
+            if successfulTry.value == 0 || successfulTry.percentValue.isNaN {
+                chartData[index].percentValue = 0.4
+            }
+        }
     }
     
     private func loadStatistics() {
@@ -48,7 +82,6 @@ class StatisticDataModel: ObservableObject {
         else {
             numberOfWonGamesPercent = 0
         }
-        print("gewonnen% - \(numberOfWonGamesPercent)")
         let numberOfGames = totalNumberOfGames == 0 ? 1 : totalNumberOfGames
         statistics.append(Float(numberOfFirstTrys) / Float(numberOfGames))
         statistics.append(Float(numberOfSecondTrys) / Float(numberOfGames))
@@ -57,27 +90,25 @@ class StatisticDataModel: ObservableObject {
         statistics.append(Float(numberOfFifthTrys) / Float(numberOfGames))
         statistics.append(Float(numberOfSixthTrys) / Float(numberOfGames))
         statistics.append(Float(numberOfLostGames) / Float(numberOfGames))
-        
-        multiplier = 1.0 / (statistics.max() ?? 0 == 0 ? 1.0 : statistics.max() ?? 0)
     }
 }
 
 struct StatisticsView: View {
     
-    @StateObject var statisticsViewModel = StatisticDataModel()
+    @StateObject var statisticsDataModel = StatisticsDataModel()
     
     var color = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
     
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                ResultField(name: "Spiele", value: statisticsViewModel.totalNumberOfGames, percent: false)
+                ResultField(name: "Spiele", value: statisticsDataModel.totalNumberOfGames, percent: false)
                 Rectangle().frame(width: 2, height: 30, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                ResultField(name: "Gewonnen", value: Int(statisticsViewModel.numberOfWonGamesPercent), percent: true)
+                ResultField(name: "Gewonnen", value: Int(statisticsDataModel.numberOfWonGamesPercent), percent: true)
                 Rectangle().frame(width: 2, height: 30, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                ResultField(name: "Serie", value: statisticsViewModel.series, percent: false)
+                ResultField(name: "Serie", value: statisticsDataModel.series, percent: false)
                 Rectangle().frame(width: 2, height: 30, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                ResultField(name: "beste Serie", value: statisticsViewModel.bestSeries, percent: false)
+                ResultField(name: "beste Serie", value: statisticsDataModel.bestSeries, percent: false)
             }
             .foregroundColor(.gray)
             .frame(maxWidth: .infinity, maxHeight: 50)
@@ -86,40 +117,7 @@ struct StatisticsView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 5))
             }
             .padding()
-            ChartView(charViewModel: ChartViewModel())
-//            VStack(spacing: 0) {
-//                Text("Anzahl der Versuche")
-//                    .font(.callout)
-//                    .fontWeight(.semibold)
-//                    .foregroundColor(.white)
-//                GeometryReader { geometry in
-//                HStack {
-//                    ForEach(0..<statisticsViewModel.statistics.count, id: \.self) {index in
-//                        let percentValue = statisticsViewModel.statistics[index]
-//                        let percentValueString = String(format: "%.0f", percentValue * 100)
-//                        let drawPercentValue = statisticsViewModel.multiplier * percentValue
-//                            VStack(spacing: 0) {
-//                                Spacer(minLength: 0)
-//                                Text("\(percentValueString)%")
-//                                    .font(.body)
-//                                    .frame(maxWidth: .infinity, alignment: .center)
-//                                    .foregroundColor(.white)
-//                                RoundedRectangle(cornerRadius: 5.0)
-//                                    .fill(Color.red)
-//                                    .frame(height: abs(geometry.size.height - 60) * max(CGFloat(drawPercentValue) , 0.01))
-//                                    .shadow(color: .black, radius: 2, x: 3, y: 3)
-//                                Text(index == 6 ? "X" : "\(index + 1)")
-//                                    .font(.headline)
-//                                    .fontWeight(.semibold)
-//                                    .foregroundColor(.white)
-//                                    .frame(maxWidth: .infinity)
-//                                    .padding(.top, 5)
-//                                    .padding(.bottom, 10)
-//                            }
-//                        }
-//                }.padding(.horizontal)
-//                }
-//            }
+            ChartView(statisticsDataModel: statisticsDataModel)
         }
         .background (
             LinearGradient(colors: [Color(uiColor: #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1)),Color(uiColor: #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)), Color(uiColor: #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1))], startPoint: .topLeading, endPoint:.bottomTrailing )

@@ -222,7 +222,6 @@ class WordleViewModel: ObservableObject {
         }
         numberOfGames += 1
         if won {
-            print(model.actualRow)
             switch model.actualRow {
             case 0:
                 numberOfFirstTrys += 1

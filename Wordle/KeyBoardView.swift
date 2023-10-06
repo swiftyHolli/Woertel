@@ -62,10 +62,12 @@ struct KeyboardView: View {
                 } label: {
                     Text("\(Image(systemName: "chart.bar.xaxis"))   ")
                         .font(.largeTitle)
-                        .foregroundColor(.white)
+                        .foregroundColor(vm.numberOfGames == 0 ? .gray : .white)
                         .background(LinearGradient(colors: [.blue, .black], startPoint: .top, endPoint:.bottom ))
                         .clipShape(Capsule())
                 }
+                .disabled(vm.numberOfGames == 0)
+
                 Button {
                     vm.settingsButtonTapped()
                 } label: {
