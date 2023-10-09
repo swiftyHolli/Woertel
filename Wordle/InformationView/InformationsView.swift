@@ -49,19 +49,9 @@ struct InformationsView: View {
                 .clipShape(.capsule)
                 .offset(y: -vm.deviceGeometry.infoViewHeight / 2)
             Button(action: {
-                vm.showSettings.toggle()
+                vm.showInfo.toggle()
             }, label: {
-                ZStack {
-                    Circle()
-                        .fill(LinearGradient(colors: [.red, .black], startPoint: UnitPoint(x: 0.5, y: 0.2), endPoint:.bottom ))
-                        .frame(width: 50, height: 50, alignment: .center)
-                        .shadow(color: .black, radius: 10, x: 5, y: 5)
-                    Text("X")
-                        .font(.system(size: 40))
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                }
-                
+                CloseButtonView()
             })
             .offset(vm.deviceGeometry.infoViewCloseButtonOffset)
         }
