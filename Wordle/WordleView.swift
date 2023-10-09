@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import GameKit
 
 struct WordleView: View {
     @ObservedObject var vm: WordleViewModel
@@ -13,6 +14,17 @@ struct WordleView: View {
         
     var body: some View {
         VStack {
+            HStack {
+                Spacer()
+                Button{
+                    vm.showSettings.toggle()
+                } label: {
+                    Image(systemName: "gear")
+                }
+                .font(.title)
+                .fontWeight(.semibold)
+            }
+            .padding(.horizontal)
             ZStack {
                 letterGrid
                 notInListFlyingText(show: vm.showNotInList)
@@ -35,10 +47,17 @@ struct WordleView: View {
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
         }
-        .fullScreenCover(isPresented: $vm.showSettings) {
+        .fullScreenCover(isPresented: $vm.showInfo) {
             InformationsView(vm: vm)
         }
+        .fullScreenCover(isPresented: $vm.showSettings) {
+            SettingsView(vm: vm)
+        }
+        .onAppear() {
+            vm.authenticateUser()
+        }
     }
+
     
     var letterGrid: some View {
         LazyVGrid(columns: gridItems(), spacing: 0) {

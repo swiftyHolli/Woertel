@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import GameKit
 
 struct WordleColors {
     static let rightPlace = Color(uiColor: #colorLiteral(red: 0.244219631, green: 0.7725548148, blue: 0.7890618443, alpha: 1))
@@ -39,6 +40,30 @@ class WordleViewModel: ObservableObject {
         static let selectDuration = 0.1
         static let lostAnimationDuration = 1.0
     }
+    
+    let localPlayer = GKLocalPlayer.local
+    func authenticateUser() {
+        localPlayer.authenticateHandler = { vc, error in
+            guard error == nil else {
+                print(error?.localizedDescription ?? "")
+                return
+            }
+            GKAccessPoint.shared.isActive = self.localPlayer.isAuthenticated
+            GKAccessPoint.shared.location = .topLeading
+        }
+    }
+    
+    func leaderboard() async{
+        Task{
+            try await GKLeaderboard.submitScore(
+                score,
+                context: 0,
+                player: GKLocalPlayer.local,
+                leaderboardIDs: ["de.chhb.wordle"]
+            )
+        }
+    }
+
     
     struct DeviceGeometry {
         var isIpad = false
@@ -78,7 +103,7 @@ class WordleViewModel: ObservableObject {
                               height: -infoViewHeight / 2 - 40)
             return size
         }
-        
+                
 
         mutating func setDeviceDimensions() {
             deviceWidth = UIScreen.main.bounds.size.width
@@ -99,6 +124,10 @@ class WordleViewModel: ObservableObject {
     func rowSelectDuration()->TimeInterval {
         return Constants.selectDuration * Double(numberOfLetters)
     }
+    
+    func willTerminate() {
+        model.willTerminate()
+    }
 
 
 
@@ -107,6 +136,7 @@ class WordleViewModel: ObservableObject {
     
     @Published private var model: WordleModel
     @Published var showStatistics = false
+    @Published var showInfo = false
     @Published var showSettings = false
     @Published var showNotInList = false
     @Published var deviceGeometry = DeviceGeometry()
@@ -121,6 +151,8 @@ class WordleViewModel: ObservableObject {
     @AppStorage("series") var series: Int = 0
     @AppStorage("bestSeries") var bestSeries: Int = 0
     @AppStorage("lastgameWasWon") var lastGameWasWon: Bool = false
+    @AppStorage("blindBode") var blindMode: Bool = false
+    @AppStorage("score") var score: Int = 0
 
     init() {
         model = WordleModel(numberOfLetters: numberOfLetters, NumberOfRows: numberOfRows)
@@ -160,7 +192,7 @@ class WordleViewModel: ObservableObject {
     }
     
     func settingsButtonTapped() {
-        showSettings.toggle()
+        showInfo.toggle()
     }
     
     func keyPressed(_ letter: WordleModel.WordleLetter) {
@@ -225,16 +257,22 @@ class WordleViewModel: ObservableObject {
             switch model.actualRow {
             case 0:
                 numberOfFirstTrys += 1
+                score += 6
             case 1:
                 numberOfSecondTrys += 1
+                score += 5
             case 2:
                 numberOfThirdTrys += 1
+                score += 4
             case 3:
                 numberOFourthTrys += 1
+                score += 3
             case 4:
                 numberOfFifthTrys += 1
+                score += 2
             case 5:
                 numberOfSixthTrys += 1
+                score += 1
             default:
                 print("error in statistic")
             }
@@ -249,6 +287,10 @@ class WordleViewModel: ObservableObject {
         else {
             lastGameWasWon = false
             series = 0
+            score -= 6
+        }
+        Task {
+            await leaderboard()
         }
     }
     

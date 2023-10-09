@@ -446,6 +446,7 @@ Genre
 Genua
 Genug
 Gerne
+Gerte
 Geste
 Getue
 Ghana
@@ -922,6 +923,7 @@ Nabob
 Nacht
 Nadel
 Nagel
+Nagen
 Nager
 Nahen
 Naive
@@ -1606,6 +1608,7 @@ Wiege
 Wiese
 Wieso
 Wille
+Winde
 Wippe
 Witwe
 Witze

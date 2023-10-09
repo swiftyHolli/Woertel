@@ -26,10 +26,26 @@ struct WordleModel {
                            "Y","X","C","V","B","N","M", "⌫"]
     
     init(numberOfLetters: Int, NumberOfRows: Int) {
-        newGame(numberOfLetters: numberOfLetters, NumberOfRows: NumberOfRows)
+        letterField = UserDefaults.standard.lastGame
+        self.numberOfRows = UserDefaults.standard.integer(forKey: "numberOfRows")
+        self.numberOfLetters = UserDefaults.standard.integer(forKey: "numberOfLetters")
+        actualRow = UserDefaults.standard.integer(forKey: "actualRow")
+        actualColumn = UserDefaults.standard.integer(forKey: "actualColumn")
+        selectedIndex = UserDefaults.standard.integer(forKey: "selectedIndex")
+        word = UserDefaults.standard.string(forKey: "word") ?? ""
+        if letterField.isEmpty || word == "" {
+            self.numberOfRows = NumberOfRows
+            self.numberOfLetters = numberOfLetters
+            actualRow = 0
+            actualColumn = 0
+            newGame(numberOfLetters: numberOfLetters, NumberOfRows: NumberOfRows)
+        }
+        else {
+            newSavedGame()
+        }
     }
     
-    struct WordleLetter: Identifiable {
+    struct WordleLetter: Identifiable, Codable {
         var letter: String
         var id: Int
         
@@ -97,6 +113,15 @@ struct WordleModel {
         actualColumn = 0
         setSelectedLetter(id: 0)
     }
+    
+    private mutating func newSavedGame() {
+        keyboardField = []
+        for index in 0..<keyboardLetters.count {
+            keyboardField.append(WordleLetter(letter: keyboardLetters[index], id: index))
+        }
+        readData()
+    }
+    
     
     mutating func setSelectedLetter(id: Int) {
         for index in actualRowIndizies() {
@@ -262,10 +287,32 @@ struct WordleModel {
             }
         }
     }
+    
+    mutating func willTerminate() {
+        UserDefaults.standard.lastGame = letterField
+        UserDefaults.standard.setValue(numberOfLetters, forKey: "numberOfLetters")
+        UserDefaults.standard.setValue(numberOfRows, forKey: "numberOfRows")
+        UserDefaults.standard.setValue(actualRow, forKey: "actualRow")
+        UserDefaults.standard.setValue(actualColumn, forKey: "actualColumn")
+        UserDefaults.standard.setValue(selectedIndex, forKey: "selectedIndex")
+        UserDefaults.standard.setValue(word, forKey: "word")
+    }
 }
 
 extension StringProtocol {
     subscript(offset: Int) -> Character {
         self[index(startIndex, offsetBy: offset)]
+    }
+}
+
+extension UserDefaults {
+    var lastGame: [WordleModel.WordleLetter] {
+        get {
+            guard let data = UserDefaults.standard.data(forKey: "lastGameField") else {return []}
+            return (try? PropertyListDecoder().decode([WordleModel.WordleLetter].self, from: data)) ?? []
+        }
+        set {
+            UserDefaults.standard.set(try? PropertyListEncoder().encode(newValue), forKey: "lastGameField")
+        }
     }
 }

@@ -22,7 +22,7 @@ struct SolutionView : View {
             }
             .clipShape(.capsule)
             .opacity(show ? 1 : 0)
-            .scaleEffect(CGSize(width: show ? 1 : 0, height: show ? 1 : 0))
+            .scaleEffect(CGSize(width: show ? 1 : 0.01, height: show ? 1 : 0.01))
             .animation(.spring(bounce: 0.8).delay(vm.lostAnimationDuration()), value: show)
     }
 }

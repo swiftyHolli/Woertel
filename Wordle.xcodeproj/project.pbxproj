@@ -24,6 +24,9 @@
 		3084A1DC2AC36C4900DC8BF9 /* WordleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3084A1DB2AC36C4900DC8BF9 /* WordleModel.swift */; };
 		3084A1DE2AC36D2600DC8BF9 /* Effects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3084A1DD2AC36D2600DC8BF9 /* Effects.swift */; };
 		3084A1E02AC377EF00DC8BF9 /* LetterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3084A1DF2AC377EF00DC8BF9 /* LetterView.swift */; };
+		30F69C022AD1942F003D384B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30F69C012AD1942F003D384B /* Launch Screen.storyboard */; };
+		30F69C042AD1EA72003D384B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F69C032AD1EA72003D384B /* SettingsView.swift */; };
+		30F69C062AD1EF27003D384B /* CloseButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F69C052AD1EF27003D384B /* CloseButtonView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +48,10 @@
 		3084A1DB2AC36C4900DC8BF9 /* WordleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordleModel.swift; sourceTree = "<group>"; };
 		3084A1DD2AC36D2600DC8BF9 /* Effects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effects.swift; sourceTree = "<group>"; };
 		3084A1DF2AC377EF00DC8BF9 /* LetterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterView.swift; sourceTree = "<group>"; };
+		30DCBB3F2AD2031D00E7D53F /* Wordle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Wordle.entitlements; sourceTree = "<group>"; };
+		30F69C012AD1942F003D384B /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		30F69C032AD1EA72003D384B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		30F69C052AD1EF27003D384B /* CloseButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButtonView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +65,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		30084C462AD363B100424DD4 /* InformationView */ = {
+			isa = PBXGroup;
+			children = (
+				3084A1D72AC36BE200DC8BF9 /* InformationsView.swift */,
+				3079086D2AC9743A00315D13 /* InfoPage1.swift */,
+				3079086F2AC9756800315D13 /* InfoPage2.swift */,
+				307908712AC975C500315D13 /* InfoPage3.swift */,
+			);
+			path = InformationView;
+			sourceTree = "<group>";
+		};
+		30084C472AD363EA00424DD4 /* StatisticView */ = {
+			isa = PBXGroup;
+			children = (
+				3084A1D52AC36BAC00DC8BF9 /* StatisticsView.swift */,
+				306070212ACE26C4007FCBE5 /* ChartView.swift */,
+			);
+			path = StatisticView;
+			sourceTree = "<group>";
+		};
 		30415B3F2AACC318009956DD = {
 			isa = PBXGroup;
 			children = (
@@ -77,20 +104,20 @@
 		30415B4A2AACC318009956DD /* Wordle */ = {
 			isa = PBXGroup;
 			children = (
+				30DCBB3F2AD2031D00E7D53F /* Wordle.entitlements */,
 				3084A1CF2AC36AE500DC8BF9 /* WordleApp.swift */,
 				3084A1D12AC36B4E00DC8BF9 /* WordleView.swift */,
 				3084A1DF2AC377EF00DC8BF9 /* LetterView.swift */,
 				3084A1D32AC36B8200DC8BF9 /* KeyboardView.swift */,
-				3084A1D52AC36BAC00DC8BF9 /* StatisticsView.swift */,
-				306070212ACE26C4007FCBE5 /* ChartView.swift */,
-				3084A1D72AC36BE200DC8BF9 /* InformationsView.swift */,
-				3079086D2AC9743A00315D13 /* InfoPage1.swift */,
-				3079086F2AC9756800315D13 /* InfoPage2.swift */,
-				307908712AC975C500315D13 /* InfoPage3.swift */,
+				30084C472AD363EA00424DD4 /* StatisticView */,
+				30084C462AD363B100424DD4 /* InformationView */,
+				30F69C032AD1EA72003D384B /* SettingsView.swift */,
+				30F69C052AD1EF27003D384B /* CloseButtonView.swift */,
 				3079086B2AC8415C00315D13 /* SolutionView.swift */,
 				3084A1D92AC36C2000DC8BF9 /* WordleViewModel.swift */,
 				3084A1DB2AC36C4900DC8BF9 /* WordleModel.swift */,
 				3084A1DD2AC36D2600DC8BF9 /* Effects.swift */,
+				30F69C012AD1942F003D384B /* Launch Screen.storyboard */,
 				30415B4F2AACC319009956DD /* Assets.xcassets */,
 				30415B792AAD2D54009956DD /* german.txt */,
 				30415B512AACC319009956DD /* Preview Content */,
@@ -167,6 +194,7 @@
 			files = (
 				30415B532AACC319009956DD /* Preview Assets.xcassets in Resources */,
 				30415B7A2AAD2D54009956DD /* german.txt in Resources */,
+				30F69C022AD1942F003D384B /* Launch Screen.storyboard in Resources */,
 				30415B502AACC319009956DD /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -178,6 +206,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30F69C042AD1EA72003D384B /* SettingsView.swift in Sources */,
 				3084A1DE2AC36D2600DC8BF9 /* Effects.swift in Sources */,
 				3084A1E02AC377EF00DC8BF9 /* LetterView.swift in Sources */,
 				3084A1D82AC36BE200DC8BF9 /* InformationsView.swift in Sources */,
@@ -190,6 +219,7 @@
 				3079086C2AC8415C00315D13 /* SolutionView.swift in Sources */,
 				3084A1D22AC36B4E00DC8BF9 /* WordleView.swift in Sources */,
 				307908702AC9756800315D13 /* InfoPage2.swift in Sources */,
+				30F69C062AD1EF27003D384B /* CloseButtonView.swift in Sources */,
 				3079086E2AC9743A00315D13 /* InfoPage1.swift in Sources */,
 				3084A1DA2AC36C2000DC8BF9 /* WordleViewModel.swift in Sources */,
 			);
@@ -320,6 +350,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Wordle/Wordle.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Wordle/Preview Content\"";
@@ -329,6 +360,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -336,7 +369,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = de.chhb.Wordle;
+				PRODUCT_BUNDLE_IDENTIFIER = de.chhb.wordle;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -351,6 +384,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Wordle/Wordle.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Wordle/Preview Content\"";
@@ -360,6 +394,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -367,7 +403,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = de.chhb.Wordle;
+				PRODUCT_BUNDLE_IDENTIFIER = de.chhb.wordle;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
