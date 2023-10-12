@@ -94,13 +94,15 @@ class StatisticsDataModel: ObservableObject {
 }
 
 struct StatisticsView: View {
-    
+    @ObservedObject var vm: WordleViewModel
+
     @StateObject var statisticsDataModel = StatisticsDataModel()
-    
+
     var color = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
     
     var body: some View {
         VStack(spacing: 0) {
+            HeaderSubView(vm: vm)
             HStack {
                 ResultField(name: "Spiele", value: statisticsDataModel.totalNumberOfGames, percent: false)
                 Rectangle().frame(width: 2, height: 30, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
@@ -121,7 +123,8 @@ struct StatisticsView: View {
         }
         .background (
             LinearGradient(colors: [Color(uiColor: #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1)),Color(uiColor: #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)), Color(uiColor: #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1))], startPoint: .topLeading, endPoint:.bottomTrailing )
-                .ignoresSafeArea()        )
+                .ignoresSafeArea()        
+        )
     }
     
     
@@ -153,8 +156,8 @@ struct StatisticsView: View {
 struct StatisticsView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            Rectangle().fill(.white)
-            StatisticsView()
+//            Rectangle().fill(.white)
+            StatisticsView(vm: WordleViewModel())
         }
     }
 }

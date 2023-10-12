@@ -11,17 +11,38 @@ import GameKit
 struct WordleView: View {
     @ObservedObject var vm: WordleViewModel
     @State var cheating = false
-        
+
     var body: some View {
         VStack {
             HStack {
+                if vm.playerImage != nil {
+                    Image(uiImage: vm.playerImage!)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 40, height: 40)
+                        .clipShape(Circle())
+                        .onTapGesture {
+                            vm.showLeaderBoard.toggle()
+                        }
+                }
+                else {
+                    Image(systemName: "person.circle")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 40, height: 40)
+                        .clipShape(Circle())
+                        .foregroundColor(.blue)
+                        .onTapGesture {
+                            vm.showLeaderBoard.toggle()
+                        }
+                }
                 Spacer()
                 Button{
                     vm.showSettings.toggle()
                 } label: {
                     Image(systemName: "gear")
                 }
-                .font(.title)
+                .font(.largeTitle)
                 .fontWeight(.semibold)
             }
             .padding(.horizontal)
@@ -43,8 +64,8 @@ struct WordleView: View {
         .sheet(isPresented: $vm.showStatistics, onDismiss: {
             vm.statisticsDismissed()
         }) {
-            StatisticsView()
-                .presentationDetents([.medium, .large])
+            StatisticsView(vm: vm)
+                .presentationDetents([.large, .large])
                 .presentationDragIndicator(.visible)
         }
         .fullScreenCover(isPresented: $vm.showInfo) {
@@ -53,8 +74,16 @@ struct WordleView: View {
         .fullScreenCover(isPresented: $vm.showSettings) {
             SettingsView(vm: vm)
         }
-        .onAppear() {
-            vm.authenticateUser()
+        .fullScreenCover(isPresented: $vm.showLeaderBoard, onDismiss: {
+            vm.showLeaderBoard = false
+        }) {
+            GameCenterView(format: vm.playerImage != nil ? .leaderboards : .default)
+        }
+
+        .onAppear {
+            withAnimation {
+                vm.authenticateUser()
+            }
         }
     }
 

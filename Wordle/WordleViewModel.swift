@@ -42,14 +42,20 @@ class WordleViewModel: ObservableObject {
     }
     
     let localPlayer = GKLocalPlayer.local
+    @Published var playerImage: UIImage?
+    @Published var displayName: String = ""
+
     func authenticateUser() {
         localPlayer.authenticateHandler = { vc, error in
             guard error == nil else {
                 print(error?.localizedDescription ?? "")
                 return
             }
-            GKAccessPoint.shared.isActive = self.localPlayer.isAuthenticated
-            GKAccessPoint.shared.location = .topLeading
+            GKAccessPoint.shared.isActive = false
+            Task{
+                //await leaderboard()
+                try await self.loadPhoto()
+            }
         }
     }
     
@@ -64,6 +70,19 @@ class WordleViewModel: ObservableObject {
         }
     }
 
+    func loadPhoto() async throws {
+        // https://github.com/alicerunsonfedora/CS400/...PrefPaneGC.swift by Marquis Curt
+        if GKLocalPlayer.local.isAuthenticated {
+            let image = try await GKLocalPlayer.local.loadPhoto(for: .normal)
+            await MainActor.run {
+                withAnimation {
+                    playerImage = image
+                    displayName = GKLocalPlayer.local.displayName
+                }
+            }
+        }
+    }
+    
     
     struct DeviceGeometry {
         var isIpad = false
@@ -128,9 +147,8 @@ class WordleViewModel: ObservableObject {
     func willTerminate() {
         model.willTerminate()
     }
-
-
-
+    
+    
     let numberOfLetters = 5
     let numberOfRows = 6
     
@@ -140,6 +158,7 @@ class WordleViewModel: ObservableObject {
     @Published var showSettings = false
     @Published var showNotInList = false
     @Published var deviceGeometry = DeviceGeometry()
+    @Published var showLeaderBoard = false
 
     @AppStorage("totalGames") var numberOfGames: Int = 0
     @AppStorage("firstTry") var numberOfFirstTrys: Int = 0

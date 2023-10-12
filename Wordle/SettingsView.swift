@@ -10,17 +10,6 @@ import GameKit
 
 struct SettingsView: View {
     @ObservedObject var vm: WordleViewModel
-    let localPlayer = GKLocalPlayer.local
-    func authenticateUser() {
-        localPlayer.authenticateHandler = { vc, error in
-            guard error == nil else {
-                print(error?.localizedDescription ?? "")
-                return
-            }
-            GKAccessPoint.shared.isActive = localPlayer.isAuthenticated
-            GKAccessPoint.shared.location = .topLeading
-        }
-    }
 
     var body: some View {
         NavigationStack {
@@ -41,7 +30,7 @@ struct SettingsView: View {
                 }
                 Divider()
                 Button("Game Center Anmeldung") {
-                    authenticateUser()
+                    vm.authenticateUser()
                 }
                 Divider()
             }
