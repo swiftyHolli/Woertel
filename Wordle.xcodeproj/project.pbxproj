@@ -25,6 +25,8 @@
 		3084A1DE2AC36D2600DC8BF9 /* Effects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3084A1DD2AC36D2600DC8BF9 /* Effects.swift */; };
 		3084A1E02AC377EF00DC8BF9 /* LetterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3084A1DF2AC377EF00DC8BF9 /* LetterView.swift */; };
 		30C10E262AD74A6800C7A08E /* GameCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C10E252AD74A6800C7A08E /* GameCenterView.swift */; };
+		30C10E2A2AD7EA7E00C7A08E /* GameCenterIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C10E292AD7EA7E00C7A08E /* GameCenterIcon.swift */; };
+		30C10E2C2AD839B400C7A08E /* FlyingScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C10E2B2AD839B400C7A08E /* FlyingScore.swift */; };
 		30F69C022AD1942F003D384B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30F69C012AD1942F003D384B /* Launch Screen.storyboard */; };
 		30F69C042AD1EA72003D384B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F69C032AD1EA72003D384B /* SettingsView.swift */; };
 		30F69C062AD1EF27003D384B /* CloseButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F69C052AD1EF27003D384B /* CloseButtonView.swift */; };
@@ -50,6 +52,8 @@
 		3084A1DD2AC36D2600DC8BF9 /* Effects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effects.swift; sourceTree = "<group>"; };
 		3084A1DF2AC377EF00DC8BF9 /* LetterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterView.swift; sourceTree = "<group>"; };
 		30C10E252AD74A6800C7A08E /* GameCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterView.swift; sourceTree = "<group>"; };
+		30C10E292AD7EA7E00C7A08E /* GameCenterIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterIcon.swift; sourceTree = "<group>"; };
+		30C10E2B2AD839B400C7A08E /* FlyingScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyingScore.swift; sourceTree = "<group>"; };
 		30DCBB3F2AD2031D00E7D53F /* Wordle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Wordle.entitlements; sourceTree = "<group>"; };
 		30F69C012AD1942F003D384B /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		30F69C032AD1EA72003D384B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -119,7 +123,9 @@
 				3084A1D92AC36C2000DC8BF9 /* WordleViewModel.swift */,
 				3084A1DB2AC36C4900DC8BF9 /* WordleModel.swift */,
 				3084A1DD2AC36D2600DC8BF9 /* Effects.swift */,
+				30C10E2B2AD839B400C7A08E /* FlyingScore.swift */,
 				30C10E252AD74A6800C7A08E /* GameCenterView.swift */,
+				30C10E292AD7EA7E00C7A08E /* GameCenterIcon.swift */,
 				30F69C012AD1942F003D384B /* Launch Screen.storyboard */,
 				30415B4F2AACC319009956DD /* Assets.xcassets */,
 				30415B792AAD2D54009956DD /* german.txt */,
@@ -212,6 +218,7 @@
 				30F69C042AD1EA72003D384B /* SettingsView.swift in Sources */,
 				3084A1DE2AC36D2600DC8BF9 /* Effects.swift in Sources */,
 				30C10E262AD74A6800C7A08E /* GameCenterView.swift in Sources */,
+				30C10E2C2AD839B400C7A08E /* FlyingScore.swift in Sources */,
 				3084A1E02AC377EF00DC8BF9 /* LetterView.swift in Sources */,
 				3084A1D82AC36BE200DC8BF9 /* InformationsView.swift in Sources */,
 				306070222ACE26C4007FCBE5 /* ChartView.swift in Sources */,
@@ -222,6 +229,7 @@
 				3084A1DC2AC36C4900DC8BF9 /* WordleModel.swift in Sources */,
 				3079086C2AC8415C00315D13 /* SolutionView.swift in Sources */,
 				3084A1D22AC36B4E00DC8BF9 /* WordleView.swift in Sources */,
+				30C10E2A2AD7EA7E00C7A08E /* GameCenterIcon.swift in Sources */,
 				307908702AC9756800315D13 /* InfoPage2.swift in Sources */,
 				30F69C062AD1EF27003D384B /* CloseButtonView.swift in Sources */,
 				3079086E2AC9743A00315D13 /* InfoPage1.swift in Sources */,

@@ -41,49 +41,6 @@ class WordleViewModel: ObservableObject {
         static let lostAnimationDuration = 1.0
     }
     
-    let localPlayer = GKLocalPlayer.local
-    @Published var playerImage: UIImage?
-    @Published var displayName: String = ""
-
-    func authenticateUser() {
-        localPlayer.authenticateHandler = { vc, error in
-            guard error == nil else {
-                print(error?.localizedDescription ?? "")
-                return
-            }
-            GKAccessPoint.shared.isActive = false
-            Task{
-                //await leaderboard()
-                try await self.loadPhoto()
-            }
-        }
-    }
-    
-    func leaderboard() async{
-        Task{
-            try await GKLeaderboard.submitScore(
-                score,
-                context: 0,
-                player: GKLocalPlayer.local,
-                leaderboardIDs: ["de.chhb.wordle"]
-            )
-        }
-    }
-
-    func loadPhoto() async throws {
-        // https://github.com/alicerunsonfedora/CS400/...PrefPaneGC.swift by Marquis Curt
-        if GKLocalPlayer.local.isAuthenticated {
-            let image = try await GKLocalPlayer.local.loadPhoto(for: .normal)
-            await MainActor.run {
-                withAnimation {
-                    playerImage = image
-                    displayName = GKLocalPlayer.local.displayName
-                }
-            }
-        }
-    }
-    
-    
     struct DeviceGeometry {
         var isIpad = false
         var deviceWidth: CGFloat = 0
@@ -122,7 +79,7 @@ class WordleViewModel: ObservableObject {
                               height: -infoViewHeight / 2 - 40)
             return size
         }
-                
+        
 
         mutating func setDeviceDimensions() {
             deviceWidth = UIScreen.main.bounds.size.width
@@ -159,6 +116,8 @@ class WordleViewModel: ObservableObject {
     @Published var showNotInList = false
     @Published var deviceGeometry = DeviceGeometry()
     @Published var showLeaderBoard = false
+    @Published var scoreToAdd = 0
+    @Published var oldScore = 0
 
     @AppStorage("totalGames") var numberOfGames: Int = 0
     @AppStorage("firstTry") var numberOfFirstTrys: Int = 0
@@ -170,12 +129,13 @@ class WordleViewModel: ObservableObject {
     @AppStorage("series") var series: Int = 0
     @AppStorage("bestSeries") var bestSeries: Int = 0
     @AppStorage("lastgameWasWon") var lastGameWasWon: Bool = false
-    @AppStorage("blindBode") var blindMode: Bool = false
+    @AppStorage("blindMode") var blindMode: Bool = false
     @AppStorage("score") var score: Int = 0
 
     init() {
         model = WordleModel(numberOfLetters: numberOfLetters, NumberOfRows: numberOfRows)
         showNotInList = false
+        oldScore = score
     }
     
     var letters: [WordleModel.WordleLetter] {
@@ -225,6 +185,8 @@ class WordleViewModel: ObservableObject {
         withTransaction(transaction) {
             model.newGame(numberOfLetters: numberOfLetters, NumberOfRows: numberOfRows)
         }
+        scoreToAdd = score - oldScore
+        oldScore = score
     }
     
     func statisticsDismissed() {
@@ -234,12 +196,17 @@ class WordleViewModel: ObservableObject {
     }
     
     func check() {
+        scoreToAdd = 0
+        oldScore = score
         let result = model.checkRow()
         if model.won {
             updateStatistic(newGame: false)
             DispatchQueue.main.asyncAfter(deadline: .now() + rowCheckDuration()) { [weak self] in
                 self?.showStatistics.toggle()
             }
+        }
+        else if model.lost {
+            updateStatistic(newGame: false)
         }
         if result == .wordNotInList {
             showNotInList = true
@@ -271,6 +238,7 @@ class WordleViewModel: ObservableObject {
         if newGame {
             if won {return}
         }
+        oldScore = score
         numberOfGames += 1
         if won {
             switch model.actualRow {
@@ -309,10 +277,10 @@ class WordleViewModel: ObservableObject {
             score -= 6
         }
         Task {
-            await leaderboard()
+            await GameCenterViewModel.shared.setHighSore(score: score)
         }
     }
-    
+        
     enum RowType {
         case allRightPlace
         case allWrong

@@ -11,31 +11,12 @@ import GameKit
 struct WordleView: View {
     @ObservedObject var vm: WordleViewModel
     @State var cheating = false
+    @State var showLeaderboard = false
 
     var body: some View {
         VStack {
             HStack {
-                if vm.playerImage != nil {
-                    Image(uiImage: vm.playerImage!)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 40, height: 40)
-                        .clipShape(Circle())
-                        .onTapGesture {
-                            vm.showLeaderBoard.toggle()
-                        }
-                }
-                else {
-                    Image(systemName: "person.circle")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 40, height: 40)
-                        .clipShape(Circle())
-                        .foregroundColor(.blue)
-                        .onTapGesture {
-                            vm.showLeaderBoard.toggle()
-                        }
-                }
+                GameCenterIcon(showLeaderboard: $showLeaderboard, scoreToAdd: $vm.scoreToAdd, score: vm.oldScore)
                 Spacer()
                 Button{
                     vm.showSettings.toggle()
@@ -65,7 +46,7 @@ struct WordleView: View {
             vm.statisticsDismissed()
         }) {
             StatisticsView(vm: vm)
-                .presentationDetents([.large, .large])
+                .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
         }
         .fullScreenCover(isPresented: $vm.showInfo) {
@@ -74,18 +55,14 @@ struct WordleView: View {
         .fullScreenCover(isPresented: $vm.showSettings) {
             SettingsView(vm: vm)
         }
-        .fullScreenCover(isPresented: $vm.showLeaderBoard, onDismiss: {
-            vm.showLeaderBoard = false
+        .fullScreenCover(isPresented: $showLeaderboard, onDismiss: {
+            showLeaderboard = false
         }) {
-            GameCenterView(format: vm.playerImage != nil ? .leaderboards : .default)
-        }
-
-        .onAppear {
-            withAnimation {
-                vm.authenticateUser()
-            }
+            GameCenterView(format: GameCenterViewModel.shared.isGKActive ? .leaderboards : .default)
+                .ignoresSafeArea()
         }
     }
+    
 
     
     var letterGrid: some View {

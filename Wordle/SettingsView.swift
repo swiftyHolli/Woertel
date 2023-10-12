@@ -26,11 +26,7 @@ struct SettingsView: View {
                 .padding(.horizontal)
                 Divider()
                 Button("Satistik zurücksetzen") {
-                    
-                }
-                Divider()
-                Button("Game Center Anmeldung") {
-                    vm.authenticateUser()
+                    vm.resetStatistic()
                 }
                 Divider()
             }

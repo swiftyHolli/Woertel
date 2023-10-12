@@ -102,7 +102,6 @@ struct StatisticsView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            HeaderSubView(vm: vm)
             HStack {
                 ResultField(name: "Spiele", value: statisticsDataModel.totalNumberOfGames, percent: false)
                 Rectangle().frame(width: 2, height: 30, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
