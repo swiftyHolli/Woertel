@@ -11,6 +11,7 @@ import GameKit
 struct SettingsView: View {
     @ObservedObject var vm: WordleViewModel
     @Binding var blindMode: Bool
+    @State var showStatisticsDeleteDialog =  false
 
     var deviceGeometry = DeviceGeometry()
     
@@ -32,7 +33,7 @@ struct SettingsView: View {
 
                 Section {
                     Button("Statistik zurücksetzen", systemImage: "trash") {
-                        vm.resetStatistic()
+                        showStatisticsDeleteDialog = true
                     }
                 }
             }
@@ -45,6 +46,15 @@ struct SettingsView: View {
                 })
 
             })
+            .alert("Wollen Sie die Statistik wirklich löschen?", isPresented: $showStatisticsDeleteDialog) {
+                Button("Ja", role: .destructive) {
+                    vm.resetStatistic()
+                    showStatisticsDeleteDialog = false
+                }
+                Button("Abbrechen", role: .cancel) {
+                    showStatisticsDeleteDialog = false
+                }
+            }
             Spacer()
         }
     }
