@@ -14,6 +14,7 @@ struct WordleModel {
     private var numberOfLetters: Int = 5
     private var numberOfRows: Int = 6
     private var selectedIndex = 0
+    private var randomIndizies = [Int]()
     
     var words = [String]()
     var word = ""
@@ -107,11 +108,13 @@ struct WordleModel {
             keyboardField.append(WordleLetter(letter: keyboardLetters[index], id: index))
         }
         readData()
-        word = words.randomElement() ?? ""
+        let randomIndex = randomIndex()
+        word = words[randomIndex]
         word = word.uppercased()
         actualRow = 0
         actualColumn = 0
         setSelectedLetter(id: 0)
+        print("randomIdizies.count: \(randomIndizies.count)")
     }
     
     private mutating func newSavedGame() {
@@ -120,6 +123,29 @@ struct WordleModel {
             keyboardField.append(WordleLetter(letter: keyboardLetters[index], id: index))
         }
         readData()
+    }
+    
+    private mutating func randomIndex()->Int {
+        if let oldIndizies = UserDefaults.standard.object(forKey: "indizies") as? [Int] {
+            randomIndizies = oldIndizies
+        }
+        else {
+            randomIndizies.removeAll()
+            for index in 0..<words.count {
+                randomIndizies.append(index)
+            }
+        }
+        let randomIndex = randomIndizies[Int.random(in: 0..<randomIndizies.count)]
+        if let removeIndex = randomIndizies.firstIndex(where: {$0 == randomIndex}) {
+            randomIndizies.remove(at: removeIndex)
+        }
+        if randomIndizies.isEmpty {
+            for index in 0..<words.count {
+                randomIndizies.append(index)
+            }
+        }
+        UserDefaults.standard.setValue(randomIndizies, forKey: "indizies")
+        return randomIndex
     }
     
     

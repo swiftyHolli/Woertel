@@ -35,7 +35,7 @@ struct KeyboardLetter: View {
                 .fill( LinearGradient(colors: [Color(uiColor: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)),Color(uiColor: #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)), Color(uiColor: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1))], startPoint: .top, endPoint:.bottom))
                 .shadow(color: .black, radius: width * 0.1, x: 0, y: width * 0.1)
             RoundedRectangle(cornerRadius: width * 0.2)
-                .fill(WordleColors.wordleColor(letter: letter, shadow: false))
+                .fill(WordleColors.wordleColor(letter: letter, shadow: false, blind: vm.blindMode))
                 .opacity(letter.rightLetter || letter.rightPlace || letter.wrongLetter ? 1 : 0)
         }
     }

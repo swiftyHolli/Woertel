@@ -16,16 +16,38 @@ struct WordleColors {
     static let wrong = Color(uiColor: #colorLiteral(red: 0.5058823824, green: 0.505882442, blue: 0.5058823824, alpha: 1))
     static let wrongShadow = Color(uiColor: #colorLiteral(red: 0.3137255013, green: 0.3137255013, blue: 0.3137255013, alpha: 1))
     
-    static func wordleColor(letter: WordleModel.WordleLetter, shadow: Bool)->Color {
+    static let rightPlaceBlind = Color(uiColor: #colorLiteral(red: 1, green: 0.5614245534, blue: 0.3310378194, alpha: 1))
+    static let rightPlaceShadowBlind = Color(uiColor: #colorLiteral(red: 0.8136706352, green: 0.4051097035, blue: 0.01514841989, alpha: 1))
+    static let rightLetterBlind = Color(uiColor: #colorLiteral(red: 0.4285933971, green: 0.7139324546, blue: 0.9999988675, alpha: 1))
+    static let rightLetterShadowBlind = Color(uiColor: #colorLiteral(red: 0.4789951444, green: 0.611972332, blue: 0.7388407588, alpha: 1))
+    static let wrongBlind = Color(uiColor: #colorLiteral(red: 0.5058823824, green: 0.505882442, blue: 0.5058823824, alpha: 1))
+    static let wrongShadowBlind = Color(uiColor: #colorLiteral(red: 0.3137255013, green: 0.3137255013, blue: 0.3137255013, alpha: 1))
+
+    static func wordleColor(letter: WordleModel.WordleLetter, shadow: Bool, blind: Bool)->Color {
         var wordleColor: Color = .white
         if letter.rightPlace {
-            wordleColor = shadow ? WordleColors.rightPlaceShadow : WordleColors.rightPlace
+            if blind {
+                wordleColor = shadow ? rightPlaceShadowBlind : rightPlaceBlind
+            }
+            else {
+                wordleColor = shadow ? rightPlaceShadow : rightPlace
+            }
         }
         else if letter.rightLetter {
-            wordleColor = shadow ? WordleColors.rightLetterShadow : WordleColors.rightLetter
+            if blind {
+                wordleColor = shadow ? rightLetterShadowBlind : rightLetterBlind
+            }
+            else  {
+                wordleColor = shadow ? rightLetterShadow : rightLetter
+            }
         }
         else if letter.wrongLetter {
-            wordleColor = shadow ? WordleColors.wrongShadow : WordleColors.wrong
+            if blind {
+                wordleColor = shadow ? wrongShadowBlind : wrongBlind
+            }
+            else {
+                wordleColor = shadow ? wrongShadow : wrong
+            }
         }
         return wordleColor
     }
@@ -33,81 +55,6 @@ struct WordleColors {
 
 
 class WordleViewModel: ObservableObject {
-    
-    struct Constants {
-        static let ShowNotInListTime = 1.5
-        static let checkDuration = 0.5
-        static let selectDuration = 0.1
-        static let lostAnimationDuration = 1.0
-    }
-    
-    struct DeviceGeometry {
-        var isIpad = false
-        var deviceWidth: CGFloat = 0
-        var deviceHeight: CGFloat = 0
-        
-        init() {
-            setDeviceDimensions()
-        }
-        
-        var infoViewWidth: CGFloat {
-            return deviceWidth * (isIpad ? 0.8 : 1.0)
-        }
-        var infoViewHeight: CGFloat {
-            return deviceHeight * (isIpad ? 0.5 : 0.7)
-        }
-        var infoPageWidth: CGFloat {
-            return deviceWidth * (isIpad ? 0.8 : 1.0) - 10
-        }
-        var infoPageLettersWidth: CGFloat {
-            return deviceWidth * (isIpad ? 0.5 : 0.8)
-        }
-        var dotsOffset: CGFloat {
-            return -(deviceHeight - infoViewHeight - 100)
-        }
-        var infoViewHeaderWidth: CGFloat {
-            return infoViewWidth - infoPageCornerRadius * 2
-        }
-        var infoPageCornerRadius: CGFloat {
-            return 25
-        }
-        var infoViewHeaderHeight: CGFloat {
-            return isIpad ? 100 : 80
-        }
-        var infoViewCloseButtonOffset: CGSize {
-            let size = CGSize(width: (infoViewWidth - 120) / 2,
-                              height: -infoViewHeight / 2 - 40)
-            return size
-        }
-        
-
-        mutating func setDeviceDimensions() {
-            deviceWidth = UIScreen.main.bounds.size.width
-            deviceHeight = UIScreen.main.bounds.size.height
-            isIpad = UIDevice.current.userInterfaceIdiom == .pad
-        }
-    }
-    
-    func rowCheckDuration()->TimeInterval {
-        return Constants.checkDuration * Double(numberOfLetters)
-    }
-    func lostAnimationDuration()->TimeInterval {
-        return Constants.checkDuration * Double(numberOfLetters) + Constants.lostAnimationDuration * 2
-    }
-    func checkDelay(id: Int)->TimeInterval {
-        return Constants.checkDuration * Double(id % numberOfLetters)
-    }
-    func rowSelectDuration()->TimeInterval {
-        return Constants.selectDuration * Double(numberOfLetters)
-    }
-    
-    func willTerminate() {
-        model.willTerminate()
-    }
-    
-    
-    let numberOfLetters = 5
-    let numberOfRows = 6
     
     @Published private var model: WordleModel
     @Published var showStatistics = false
@@ -118,7 +65,7 @@ class WordleViewModel: ObservableObject {
     @Published var showLeaderBoard = false
     @Published var scoreToAdd = 0
     @Published var oldScore = 0
-
+    
     @AppStorage("totalGames") var numberOfGames: Int = 0
     @AppStorage("firstTry") var numberOfFirstTrys: Int = 0
     @AppStorage("secondTry") var numberOfSecondTrys: Int = 0
@@ -132,6 +79,16 @@ class WordleViewModel: ObservableObject {
     @AppStorage("blindMode") var blindMode: Bool = false
     @AppStorage("score") var score: Int = 0
 
+    struct Constants {
+        static let ShowNotInListTime = 1.5
+        static let checkDuration = 0.5
+        static let selectDuration = 0.1
+        static let lostAnimationDuration = 1.0
+    }
+    
+    let numberOfLetters = 5
+    let numberOfRows = 6
+ 
     init() {
         model = WordleModel(numberOfLetters: numberOfLetters, NumberOfRows: numberOfRows)
         showNotInList = false
@@ -162,7 +119,26 @@ class WordleViewModel: ObservableObject {
         return model.actualRow > 0 || model.won
     }
     
+    // MARK - animation timing
+    func rowCheckDuration()->TimeInterval {
+        return Constants.checkDuration * Double(numberOfLetters)
+    }
+    func lostAnimationDuration()->TimeInterval {
+        return Constants.checkDuration * Double(numberOfLetters) + Constants.lostAnimationDuration * 2
+    }
+    func checkDelay(id: Int)->TimeInterval {
+        return Constants.checkDuration * Double(id % numberOfLetters)
+    }
+    func rowSelectDuration()->TimeInterval {
+        return Constants.selectDuration * Double(numberOfLetters)
+    }
+    
+    // MARK - user intents
     func letterTapped(_ letter: WordleModel.WordleLetter) {
+        if lost {
+            newGame()
+            return
+        }
         model.setSelectedLetter(id: letter.id)
     }
     
@@ -236,7 +212,7 @@ class WordleViewModel: ObservableObject {
     
     private func updateStatistic(newGame: Bool) {
         if newGame {
-            if won {return}
+            if won || lost {return}
         }
         oldScore = score
         numberOfGames += 1
@@ -276,54 +252,13 @@ class WordleViewModel: ObservableObject {
             series = 0
             score -= 6
         }
+        
         Task {
-            await GameCenterViewModel.shared.setHighSore(score: score)
+            await GameCenterManager.shared.setHighSore(score: score)
         }
     }
         
-    enum RowType {
-        case allRightPlace
-        case allWrong
-        case rightPlaceAndLetter
-        case oneRightPlace
-        case oneRightLetter
-    }
-    
-    func letterRow(type: RowType)->[WordleModel.WordleLetter] {
-        var row = [WordleModel.WordleLetter]()
-        switch type {
-        case .allRightPlace:
-            row.append(WordleModel.WordleLetter(letter: "A", id: 0, rightPlace: true, rightLetter: false, wrongLetter: false))
-            row.append(WordleModel.WordleLetter(letter: "D", id: 1, rightPlace: true, rightLetter: false, wrongLetter: false))
-            row.append(WordleModel.WordleLetter(letter: "L", id: 2, rightPlace: true, rightLetter: false, wrongLetter: false))
-            row.append(WordleModel.WordleLetter(letter: "E", id: 3, rightPlace: true, rightLetter: false, wrongLetter: false))
-            row.append(WordleModel.WordleLetter(letter: "R", id: 4, rightPlace: true, rightLetter: false, wrongLetter: false))
-        case .allWrong:
-            row.append(WordleModel.WordleLetter(letter: "U", id: 0, rightPlace: false, rightLetter: false, wrongLetter: true))
-            row.append(WordleModel.WordleLetter(letter: "N", id: 1, rightPlace: false, rightLetter: false, wrongLetter: true))
-            row.append(WordleModel.WordleLetter(letter: "I", id: 2, rightPlace: false, rightLetter: false, wrongLetter: true))
-            row.append(WordleModel.WordleLetter(letter: "O", id: 3, rightPlace: false, rightLetter: false, wrongLetter: true))
-            row.append(WordleModel.WordleLetter(letter: "N", id: 4, rightPlace: false, rightLetter: false, wrongLetter: true))
-        case .rightPlaceAndLetter:
-            row.append(WordleModel.WordleLetter(letter: "A", id: 0, rightPlace: true, rightLetter: false, wrongLetter: false))
-            row.append(WordleModel.WordleLetter(letter: "R", id: 1, rightPlace: false, rightLetter: true, wrongLetter: false))
-            row.append(WordleModel.WordleLetter(letter: "G", id: 2, rightPlace: false, rightLetter: false, wrongLetter: true))
-            row.append(WordleModel.WordleLetter(letter: "O", id: 3, rightPlace: false, rightLetter: false, wrongLetter: true))
-            row.append(WordleModel.WordleLetter(letter: "N", id: 4, rightPlace: false, rightLetter: false , wrongLetter: true))
-        case .oneRightPlace:
-            row.append(WordleModel.WordleLetter(letter: "A", id: 0, rightPlace: true, rightLetter: false, wrongLetter: false))
-            row.append(WordleModel.WordleLetter(letter: "N", id: 1, rightPlace: false, rightLetter: false, wrongLetter: true))
-            row.append(WordleModel.WordleLetter(letter: "T", id: 2, rightPlace: false, rightLetter: false, wrongLetter: true))
-            row.append(WordleModel.WordleLetter(letter: "I", id: 3, rightPlace: false, rightLetter: false, wrongLetter: true))
-            row.append(WordleModel.WordleLetter(letter: "K", id: 4, rightPlace: false, rightLetter: false, wrongLetter: true))
-        case .oneRightLetter:
-            row.append(WordleModel.WordleLetter(letter: "K", id: 0, rightPlace: false, rightLetter: false, wrongLetter: true))
-            row.append(WordleModel.WordleLetter(letter: "L", id: 1, rightPlace: false, rightLetter: true, wrongLetter: false))
-            row.append(WordleModel.WordleLetter(letter: "A", id: 2, rightPlace: false, rightLetter: true, wrongLetter: false))
-            row.append(WordleModel.WordleLetter(letter: "N", id: 3, rightPlace: false, rightLetter: false, wrongLetter: true))
-            row.append(WordleModel.WordleLetter(letter: "G", id: 4, rightPlace: false, rightLetter: false, wrongLetter: true))
-
-        }
-        return row
+    func willTerminate() {
+        model.willTerminate()
     }
 }

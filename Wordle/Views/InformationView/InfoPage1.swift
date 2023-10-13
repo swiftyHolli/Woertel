@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct InfoViewPage1:View {
-    @ObservedObject var vm: WordleViewModel
+    @Binding var blindMode: Bool
     @Binding var selection: Int
+    var deviceGeometry: DeviceGeometry
     
+    var letterRows = LetterRows()
+
     var body: some View {
         VStack {
             Spacer()
@@ -19,11 +22,11 @@ struct InfoViewPage1:View {
                 .fontWeight(.semibold)
                 .padding(.top, 50.0)
             HStack {
-                ForEach(vm.letterRow(type: .allRightPlace)) { letter in
-                    LetterView(vm: WordleViewModel(), letter: letter)
+                ForEach(letterRows.letterRow(type: .allRightPlace)) { letter in
+                    InfoLetterView(blindMode: $blindMode, letter: letter)
                 }
             }
-            .frame(maxWidth: vm.deviceGeometry.infoPageLettersWidth)
+            .frame(maxWidth: deviceGeometry.infoPageLettersWidth)
             .padding(.vertical)
             Text("Tippe zum Start ein beliebiges Wort ein.")
                 .font(.title2)
@@ -31,11 +34,11 @@ struct InfoViewPage1:View {
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
             HStack {
-                ForEach(vm.letterRow(type: .allWrong)) { letter in
-                    LetterView(vm: WordleViewModel(), letter: letter)
+                ForEach(letterRows.letterRow(type: .allWrong)) { letter in
+                    InfoLetterView(blindMode: $blindMode, letter: letter)
                 }
             }
-            .frame(maxWidth: vm.deviceGeometry.infoPageLettersWidth)
+            .frame(maxWidth: deviceGeometry.infoPageLettersWidth)
             .padding()
 
             Text("Die Farben der Kästchen zeigen den Fortschritt an.")
@@ -47,8 +50,8 @@ struct InfoViewPage1:View {
         }
         .foregroundColor(.white)
         .padding()
-        .frame(width: vm.deviceGeometry.infoPageWidth, 
-               height: vm.deviceGeometry.infoViewHeight,
+        .frame(width: deviceGeometry.infoPageWidth,
+               height: deviceGeometry.infoViewHeight,
                alignment: .center)
         .background {
             ZStack {
@@ -60,5 +63,5 @@ struct InfoViewPage1:View {
 }
 
 #Preview {
-    InfoViewPage1(vm: WordleViewModel(), selection: .constant(0))
+    InfoViewPage1(blindMode: .constant(false), selection: .constant(0), deviceGeometry: DeviceGeometry())
 }

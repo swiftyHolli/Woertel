@@ -1,27 +1,27 @@
 //
-//  GameCenterIcon.swift
+//  GameCenterManager.swift
 //  Wordle
 //
-//  Created by Holger Becker on 12.10.23.
+//  Created by Holger Becker on 13.10.23.
 //
 
 import SwiftUI
 import GameKit
 
-final class GameCenterViewModel: ObservableObject {
+final class GameCenterManager: ObservableObject {
     
-    static let shared = GameCenterViewModel()
+    static let shared = GameCenterManager()
     let localPlayer = GKLocalPlayer.local
     @AppStorage("score") var score: Int = 0
-
-    private init() { 
+    
+    private init() {
         authenticateUser()
     }
     
     @Published var playerImage: UIImage?
     @Published var displayName: String = ""
     var isGKActive = false
-
+    
     func authenticateUser() {
         localPlayer.authenticateHandler = { [self] vc, error in
             guard error == nil else {
@@ -35,7 +35,7 @@ final class GameCenterViewModel: ObservableObject {
             GKAccessPoint.shared.showHighlights = false
             GKAccessPoint.shared.isActive = false
             getHighScoreFromLeadboard()
-
+            
         }
     }
     
@@ -78,8 +78,8 @@ final class GameCenterViewModel: ObservableObject {
                 { player, _, _ in           // completionHandler 02: .loadEntries
                     
                     // Save on UserDefault
-                   // UserDefaults.standard.set(player?.score, forKey: "score")
-                    if let tempScore = player?.score {
+                    // UserDefaults.standard.set(player?.score, forKey: "score")
+                    if let _ = player?.score {
                         if self.score < player!.score {
                             self.score = player!.score
                         }
@@ -88,71 +88,5 @@ final class GameCenterViewModel: ObservableObject {
             }
         }
     }
-
 }
 
-
-struct GameCenterIcon: View {
-    @ObservedObject var vm = GameCenterViewModel.shared
-    @Binding var showLeaderboard: Bool
-    @Binding var scoreToAdd: Int
-    var score: Int
-
-    
-    var body: some View {
-        if vm.playerImage != nil {
-            HStack {
-                Button(action: {
-                    showLeaderboard = true
-                }
-                       , label: {
-                    ZStack {
-                        Circle()
-                            .stroke(lineWidth: 3)
-                            .foregroundColor(.black)
-                            .frame(width: 40, height: 40)
-                        Image(uiImage: vm.playerImage!)
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .clipShape(Circle())
-                    }
-                })
-                .overlay {
-                    FlyingScore(scoreToAdd: $scoreToAdd)
-                }
-                Text("\(score)")
-                    .padding(.horizontal, 5.0)
-                    .background(.red)
-                    .foregroundStyle(.white)
-                    .clipShape(.capsule)
-                    .animation(.easeInOut(duration: 1), value: score)
-            }
-        }
-        else {
-            HStack {
-                Button(action: {
-                    showLeaderboard = true
-                }
-                       , label: {
-                    Image(systemName: "person.circle")
-                        .resizable()
-                        .frame(width: 40, height: 40)
-                        .clipShape(Circle())
-                })
-                .overlay {
-                        FlyingScore(scoreToAdd: $scoreToAdd)
-                }
-                Text("\(score)")
-                    .padding(.horizontal, 5.0)
-                    .background(.red)
-                    .foregroundStyle(.white)
-                    .clipShape(.capsule)
-                    .animation(.easeInOut(duration: 1), value: score)
-            }
-        }
-    }
-}
-
-#Preview {
-    GameCenterIcon(showLeaderboard: .constant(true), scoreToAdd: .constant(0), score: 288)
-}

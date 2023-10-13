@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct InfoViewPage2:View {
-    @ObservedObject var vm: WordleViewModel
+    @Binding var blindMode: Bool
     @Binding var selection: Int
-    
+    var deviceGeometry: DeviceGeometry
+
+    var letterRows = LetterRows()
+
     var body: some View {
         VStack {
             Spacer()
@@ -21,11 +24,11 @@ struct InfoViewPage2:View {
                 .fixedSize(horizontal: false, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
                 .padding(.top, 50.0)
             HStack {
-                ForEach(vm.letterRow(type: .oneRightPlace)) { letter in
-                    LetterView(vm: WordleViewModel(), letter: letter)
+                ForEach(letterRows.letterRow(type: .oneRightPlace)) { letter in
+                    InfoLetterView(blindMode: $blindMode, letter: letter)
                 }
             }
-            .frame(maxWidth: vm.deviceGeometry.infoPageLettersWidth)
+            .frame(maxWidth: deviceGeometry.infoPageLettersWidth)
             .padding(.vertical)
             Text("Der Buchstabe \"A\" ist an der richtigen Stelle.")
                 .font(.title2)
@@ -33,11 +36,11 @@ struct InfoViewPage2:View {
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
             HStack {
-                ForEach(vm.letterRow(type: .oneRightLetter)) { letter in
-                    LetterView(vm: WordleViewModel(), letter: letter)
+                ForEach(letterRows.letterRow(type: .oneRightLetter)) { letter in
+                    InfoLetterView(blindMode: $blindMode, letter: letter)
                 }
             }
-            .frame(maxWidth: vm.deviceGeometry.infoPageLettersWidth)
+            .frame(maxWidth: deviceGeometry.infoPageLettersWidth)
 
             .padding(.vertical)
             Text("Die Buchstaben \"L\" und \"A\" stehen an der falschen Stelle.")
@@ -49,8 +52,8 @@ struct InfoViewPage2:View {
         }
         .foregroundColor(.white)
         .padding()
-        .frame(width: vm.deviceGeometry.infoPageWidth,
-               height: vm.deviceGeometry.infoViewHeight,
+        .frame(width: deviceGeometry.infoPageWidth,
+               height: deviceGeometry.infoViewHeight,
                alignment: .center)
         .background {
             RoundedRectangle(cornerRadius: /*@START_MENU_TOKEN@*/25.0/*@END_MENU_TOKEN@*/)
@@ -60,5 +63,5 @@ struct InfoViewPage2:View {
 }
 
 #Preview {
-    InfoViewPage2(vm: WordleViewModel(), selection: .constant(1))
+    InfoViewPage2(blindMode: .constant(false), selection: .constant(1), deviceGeometry: DeviceGeometry())
 }

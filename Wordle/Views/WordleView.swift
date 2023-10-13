@@ -31,6 +31,11 @@ struct WordleView: View {
                 letterGrid
                 notInListFlyingText(show: vm.showNotInList)
             }
+            .onTapGesture {
+                if vm.lost {
+                    vm.newGame()
+                }
+            }
             Spacer()
             Text(cheating ? vm.word : "Zeigen")
                 .onTapGesture(perform: {
@@ -50,15 +55,15 @@ struct WordleView: View {
                 .presentationDragIndicator(.visible)
         }
         .fullScreenCover(isPresented: $vm.showInfo) {
-            InformationsView(vm: vm)
+            InformationsView(blindMode: $vm.blindMode, showInfo: $vm.showInfo)
         }
         .fullScreenCover(isPresented: $vm.showSettings) {
-            SettingsView(vm: vm)
+            SettingsView(vm: vm, blindMode: $vm.blindMode)
         }
         .fullScreenCover(isPresented: $showLeaderboard, onDismiss: {
             showLeaderboard = false
         }) {
-            GameCenterView(format: GameCenterViewModel.shared.isGKActive ? .leaderboards : .default)
+            GameCenterView(format: GameCenterManager.shared.isGKActive ? .leaderboards : .default)
                 .ignoresSafeArea()
         }
     }

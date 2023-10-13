@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct InfoViewPage3:View {
-    @ObservedObject var vm: WordleViewModel
+    @Binding var blindMode: Bool
     @Binding var selection: Int
+    var deviceGeometry: DeviceGeometry
+    
+    var letterRows = LetterRows()
     
     var body: some View {
         VStack {
@@ -21,11 +24,11 @@ struct InfoViewPage3:View {
                 .fixedSize(horizontal: false, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
                 .padding(.top, 50)
             HStack {
-                ForEach(vm.letterRow(type: .rightPlaceAndLetter)) { letter in
-                    LetterView(vm: WordleViewModel(), letter: letter)
+                ForEach(letterRows.letterRow(type: .rightPlaceAndLetter)) { letter in
+                    InfoLetterView(blindMode: $blindMode, letter: letter)
                 }
             }
-            .frame(maxWidth: vm.deviceGeometry.infoPageLettersWidth)
+            .frame(maxWidth: deviceGeometry.infoPageLettersWidth)
             .padding(.vertical)
             Spacer()
             Text("Du hast insgesamt sechs Versuche.")
@@ -39,15 +42,12 @@ struct InfoViewPage3:View {
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding()
-            Button("Statistik löschen") {
-                vm.resetStatistic()
-            }
             Spacer()
          }
         .foregroundColor(.white)
         .padding()
-        .frame(width: vm.deviceGeometry.infoPageWidth,
-               height: vm.deviceGeometry.infoViewHeight,
+        .frame(width: deviceGeometry.infoPageWidth,
+               height: deviceGeometry.infoViewHeight,
                alignment: .center)
         .background {
             RoundedRectangle(cornerRadius: /*@START_MENU_TOKEN@*/25.0/*@END_MENU_TOKEN@*/)
@@ -57,5 +57,5 @@ struct InfoViewPage3:View {
 }
 
 #Preview {
-    InfoViewPage3(vm: WordleViewModel(), selection: .constant(2))
+    InfoViewPage3(blindMode: .constant(false), selection: .constant(2), deviceGeometry: DeviceGeometry())
 }

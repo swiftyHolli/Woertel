@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct FlyingScore: View {
-    @Binding var scoreToAdd: Int
+    var scoreToAdd: Int
+    
     @State private var offset: CGFloat = 0
     var body: some View {
         if scoreToAdd != 0 {
@@ -27,10 +28,11 @@ struct FlyingScore: View {
                 .onDisappear {
                     offset = 0
                 }
+                .zIndex(100)
         }
     }
 }
 
 #Preview {
-    FlyingScore(scoreToAdd: .constant(-6))
+    FlyingScore(scoreToAdd: -6)
 }

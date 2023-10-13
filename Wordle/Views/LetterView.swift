@@ -26,8 +26,8 @@ struct LetterView : View {
                 .opacity(letter.isChecked ? 0 : 1)
                 ZStack {
                     RoundedRectangle(cornerRadius: 5)
-                        .fill(WordleColors.wordleColor(letter: letter, shadow: false))
-                        .shadow(color: WordleColors.wordleColor(letter: letter, shadow: true),
+                        .fill(WordleColors.wordleColor(letter: letter, shadow: false, blind: vm.blindMode))
+                        .shadow(color: WordleColors.wordleColor(letter: letter, shadow: true, blind: vm.blindMode),
                                 radius: 0, x: 3, y: 3)
                     letterText
                 }
@@ -72,7 +72,7 @@ struct LetterView : View {
 struct LetterView_Previews: PreviewProvider {
     static var previews: some View {
         let vm = WordleViewModel()
-        var letter = WordleModel.WordleLetter(letter: "L", id: 5, isSelected: false, isDisabled: false, isChecked: true, rightPlace: false, rightLetter: false, wrongLetter: true, shake: false)
+        let letter = WordleModel.WordleLetter(letter: "L", id: 5, isSelected: false, isDisabled: false, isChecked: true, rightPlace: false, rightLetter: false, wrongLetter: true, shake: false)
         VStack(spacing: 20) {
             HStack {
                 LetterView(vm: vm, letter: WordleModel.WordleLetter(letter: "", id: 1, isSelected: false, isDisabled: true, isChecked: false, rightPlace: false, rightLetter: false, wrongLetter: false, shake: false))
@@ -89,11 +89,6 @@ struct LetterView_Previews: PreviewProvider {
                     .frame(width: 55, height: 55, alignment: .center)
                 LetterView(vm: vm, letter: WordleModel.WordleLetter(letter: "R", id: 7, isSelected: false, isDisabled: false, isChecked: true, rightPlace: true, rightLetter: false, wrongLetter: false, shake: false))
                     .frame(width: 55, height: 55, alignment: .center)
-            }
-            Button("Verloren") {
-                withAnimation {
-                    letter.isPartOfLostGame.toggle()
-                }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
