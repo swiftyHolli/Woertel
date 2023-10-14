@@ -37,10 +37,6 @@ struct WordleView: View {
                 }
             }
             Spacer()
-            Text(cheating ? vm.word : "Zeigen")
-                .onTapGesture(perform: {
-                    cheating.toggle()
-                })
             KeyboardView(vm: vm)
         }
         .background {
