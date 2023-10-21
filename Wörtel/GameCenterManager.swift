@@ -45,7 +45,7 @@ final class GameCenterManager: ObservableObject {
                 score,
                 context: 0,
                 player: GKLocalPlayer.local,
-                leaderboardIDs: ["de.chhb.wordle"]
+                leaderboardIDs: ["de.chhb.woertel"]
             )
         }
     }
@@ -68,7 +68,7 @@ final class GameCenterManager: ObservableObject {
         if (GKLocalPlayer.local.isAuthenticated) {
             // Load the leaderboards that will be accessed
             GKLeaderboard.loadLeaderboards(
-                IDs: ["de.chhb.wordle"]          // Leaderboards'id  that will be accessed
+                IDs: ["de.chhb.woertel"]          // Leaderboards'id  that will be accessed
             ) { leaderboards, _ in          // completionHandler 01: .loadLeaderboards
                 
                 // Access the first leaderboard

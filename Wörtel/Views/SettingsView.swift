@@ -9,7 +9,7 @@ import SwiftUI
 import GameKit
 
 struct SettingsView: View {
-    @ObservedObject var vm: WordleViewModel
+    @ObservedObject var vm: WoertelViewModel
     @Binding var blindMode: Bool
     @State var showStatisticsDeleteDialog =  false
 
@@ -61,5 +61,5 @@ struct SettingsView: View {
 }
 
 #Preview {
-    SettingsView(vm: WordleViewModel(), blindMode: .constant(true), deviceGeometry: DeviceGeometry())
+    SettingsView(vm: WoertelViewModel(), blindMode: .constant(true), deviceGeometry: DeviceGeometry())
 }

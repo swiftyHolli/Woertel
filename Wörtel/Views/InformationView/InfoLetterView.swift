@@ -9,9 +9,9 @@ import SwiftUI
 
 struct InfoLetterView : View {
     @Binding var blindMode: Bool
-    typealias Constants  = WordleViewModel.Constants
+    typealias Constants  = WoertelViewModel.Constants
     
-    let letter: WordleModel.WordleLetter
+    let letter: WoertelModel.WordleLetter
     var  body: some View {
         Button {
         } label: {
@@ -48,5 +48,5 @@ struct InfoLetterView : View {
 }
 
 #Preview {
-    InfoLetterView(blindMode: .constant(false), letter: WordleModel.WordleLetter(letter: "A", id: 0, isSelected: true, isDisabled: false, isChecked: true, rightPlace: true, rightLetter: false, wrongLetter: false, shake: false)).frame(width: 100, height: 100, alignment: .center)
+    InfoLetterView(blindMode: .constant(false), letter: WoertelModel.WordleLetter(letter: "A", id: 0, isSelected: true, isDisabled: false, isChecked: true, rightPlace: true, rightLetter: false, wrongLetter: false, shake: false)).frame(width: 100, height: 100, alignment: .center)
 }

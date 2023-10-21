@@ -1,5 +1,5 @@
 //
-//  WordleViewModel.swift
+//  WoertelViewModel.swift
 //  Wordle MVVM
 //
 //  Created by Holger Becker on 21.09.23.
@@ -23,7 +23,7 @@ struct WordleColors {
     static let wrongBlind = Color(uiColor: #colorLiteral(red: 0.5058823824, green: 0.505882442, blue: 0.5058823824, alpha: 1))
     static let wrongShadowBlind = Color(uiColor: #colorLiteral(red: 0.3137255013, green: 0.3137255013, blue: 0.3137255013, alpha: 1))
 
-    static func wordleColor(letter: WordleModel.WordleLetter, shadow: Bool, blind: Bool)->Color {
+    static func wordleColor(letter: WoertelModel.WordleLetter, shadow: Bool, blind: Bool)->Color {
         var wordleColor: Color = .white
         if letter.rightPlace {
             if blind {
@@ -54,9 +54,9 @@ struct WordleColors {
 }
 
 
-class WordleViewModel: ObservableObject {
+class WoertelViewModel: ObservableObject {
     
-    @Published private var model: WordleModel
+    @Published private var model: WoertelModel
     @Published var showStatistics = false
     @Published var showInfo = false
     @Published var showSettings = false
@@ -90,12 +90,12 @@ class WordleViewModel: ObservableObject {
     let numberOfRows = 6
  
     init() {
-        model = WordleModel(numberOfLetters: numberOfLetters, NumberOfRows: numberOfRows)
+        model = WoertelModel(numberOfLetters: numberOfLetters, NumberOfRows: numberOfRows)
         showNotInList = false
         oldScore = score
     }
     
-    var letters: [WordleModel.WordleLetter] {
+    var letters: [WoertelModel.WordleLetter] {
         return model.letterField
     }
     
@@ -111,7 +111,7 @@ class WordleViewModel: ObservableObject {
         return model.lost
     }
     
-    var keys: [WordleModel.WordleLetter] {
+    var keys: [WoertelModel.WordleLetter] {
         return model.keyboardField
     }
     
@@ -134,7 +134,7 @@ class WordleViewModel: ObservableObject {
     }
     
     // MARK - user intents
-    func letterTapped(_ letter: WordleModel.WordleLetter) {
+    func letterTapped(_ letter: WoertelModel.WordleLetter) {
         if lost {
             newGame()
             return
@@ -150,7 +150,7 @@ class WordleViewModel: ObservableObject {
         showInfo.toggle()
     }
     
-    func keyPressed(_ letter: WordleModel.WordleLetter) {
+    func keyPressed(_ letter: WoertelModel.WordleLetter) {
         model.setKeyboardLetter(letter)
     }
     

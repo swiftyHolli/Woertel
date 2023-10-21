@@ -1,5 +1,5 @@
 //
-//  WordleModel.swift
+//  WoertelModel.swift
 //  Wordle MVVM
 //
 //  Created by Holger Becker on 21.09.23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct WordleModel {
+struct WoertelModel {
     
     private(set) var  letterField = [WordleLetter]()
     private(set) var  keyboardField = [WordleLetter]()
@@ -332,10 +332,10 @@ extension StringProtocol {
 }
 
 extension UserDefaults {
-    var lastGame: [WordleModel.WordleLetter] {
+    var lastGame: [WoertelModel.WordleLetter] {
         get {
             guard let data = UserDefaults.standard.data(forKey: "lastGameField") else {return []}
-            return (try? PropertyListDecoder().decode([WordleModel.WordleLetter].self, from: data)) ?? []
+            return (try? PropertyListDecoder().decode([WoertelModel.WordleLetter].self, from: data)) ?? []
         }
         set {
             UserDefaults.standard.set(try? PropertyListEncoder().encode(newValue), forKey: "lastGameField")

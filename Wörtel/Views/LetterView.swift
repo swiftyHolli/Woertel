@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct LetterView : View {
-    @ObservedObject var vm: WordleViewModel
-    typealias Constants  = WordleViewModel.Constants
+    @ObservedObject var vm: WoertelViewModel
+    typealias Constants  = WoertelViewModel.Constants
         
-    let letter: WordleModel.WordleLetter
+    let letter: WoertelModel.WordleLetter
     var  body: some View {
         Button {
             vm.letterTapped(letter)
@@ -71,32 +71,32 @@ struct LetterView : View {
 
 struct LetterView_Previews: PreviewProvider {
     static var previews: some View {
-        let vm = WordleViewModel()
+        let vm = WoertelViewModel()
         let framesize:CGFloat = 200
         ZStack {
             VStack(spacing: framesize / 30) {
                 HStack(spacing: framesize/30) {
-                    LetterView(vm: vm, letter: WordleModel.WordleLetter(letter: "T", id: 1, isSelected: false, isDisabled: false, isChecked: true, rightPlace: true, rightLetter: false, wrongLetter: false, shake: false))
+                    LetterView(vm: vm, letter: WoertelModel.WordleLetter(letter: "T", id: 1, isSelected: false, isDisabled: false, isChecked: true, rightPlace: true, rightLetter: false, wrongLetter: false, shake: false))
                         .frame(width: framesize, height: framesize, alignment: .center)
-                    LetterView(vm: vm, letter: WordleModel.WordleLetter(letter: "A", id: 2, isSelected: false, isDisabled: false, isChecked: true, rightPlace: false, rightLetter: true, wrongLetter: false, shake: false))
+                    LetterView(vm: vm, letter: WoertelModel.WordleLetter(letter: "A", id: 2, isSelected: false, isDisabled: false, isChecked: true, rightPlace: false, rightLetter: true, wrongLetter: false, shake: false))
                         .frame(width: framesize, height: framesize, alignment: .center)
-                    LetterView(vm: vm, letter: WordleModel.WordleLetter(letter: "D", id: 3, isSelected: true, isDisabled: false, isChecked: true, rightPlace: false, rightLetter: false, wrongLetter: true, shake: false))
-                        .frame(width: framesize, height: framesize, alignment: .center)
-                }
-                HStack(spacing: framesize / 30) {
-                    LetterView(vm: vm, letter: WordleModel.WordleLetter(letter: "T", id: 1, isSelected: false, isDisabled: false, isChecked: true, rightPlace: true, rightLetter: false, wrongLetter: false, shake: false))
-                        .frame(width: framesize, height: framesize, alignment: .center)
-                    LetterView(vm: vm, letter: WordleModel.WordleLetter(letter: "I", id: 6, isSelected: false, isDisabled: false, isChecked: true, rightPlace: false, rightLetter: false, wrongLetter: true, shake: false))
-                        .frame(width: framesize, height: framesize, alignment: .center)
-                    LetterView(vm: vm, letter: WordleModel.WordleLetter(letter: "R", id: 7, isSelected: false, isDisabled: false, isChecked: true, rightPlace: true, rightLetter: false, wrongLetter: false, shake: false))
+                    LetterView(vm: vm, letter: WoertelModel.WordleLetter(letter: "D", id: 3, isSelected: true, isDisabled: false, isChecked: true, rightPlace: false, rightLetter: false, wrongLetter: true, shake: false))
                         .frame(width: framesize, height: framesize, alignment: .center)
                 }
                 HStack(spacing: framesize / 30) {
-                    LetterView(vm: vm, letter: WordleModel.WordleLetter(letter: "T", id: 1, isSelected: false, isDisabled: false, isChecked: false, rightPlace: true, rightLetter: false, wrongLetter: false, shake: false))
+                    LetterView(vm: vm, letter: WoertelModel.WordleLetter(letter: "T", id: 1, isSelected: false, isDisabled: false, isChecked: true, rightPlace: true, rightLetter: false, wrongLetter: false, shake: false))
                         .frame(width: framesize, height: framesize, alignment: .center)
-                    LetterView(vm: vm, letter: WordleModel.WordleLetter(letter: "E", id: 6, isSelected: false, isDisabled: false, isChecked: false, rightPlace: false, rightLetter: true, wrongLetter: false, shake: false))
+                    LetterView(vm: vm, letter: WoertelModel.WordleLetter(letter: "I", id: 6, isSelected: false, isDisabled: false, isChecked: true, rightPlace: false, rightLetter: false, wrongLetter: true, shake: false))
                         .frame(width: framesize, height: framesize, alignment: .center)
-                    LetterView(vm: vm, letter: WordleModel.WordleLetter(letter: "R", id: 7, isSelected: true, isDisabled: false, isChecked: false, rightPlace: true, rightLetter: false, wrongLetter: false, shake: false))
+                    LetterView(vm: vm, letter: WoertelModel.WordleLetter(letter: "R", id: 7, isSelected: false, isDisabled: false, isChecked: true, rightPlace: true, rightLetter: false, wrongLetter: false, shake: false))
+                        .frame(width: framesize, height: framesize, alignment: .center)
+                }
+                HStack(spacing: framesize / 30) {
+                    LetterView(vm: vm, letter: WoertelModel.WordleLetter(letter: "T", id: 1, isSelected: false, isDisabled: false, isChecked: false, rightPlace: true, rightLetter: false, wrongLetter: false, shake: false))
+                        .frame(width: framesize, height: framesize, alignment: .center)
+                    LetterView(vm: vm, letter: WoertelModel.WordleLetter(letter: "E", id: 6, isSelected: false, isDisabled: false, isChecked: false, rightPlace: false, rightLetter: true, wrongLetter: false, shake: false))
+                        .frame(width: framesize, height: framesize, alignment: .center)
+                    LetterView(vm: vm, letter: WoertelModel.WordleLetter(letter: "R", id: 7, isSelected: true, isDisabled: false, isChecked: false, rightPlace: true, rightLetter: false, wrongLetter: false, shake: false))
                         .frame(width: framesize, height: framesize, alignment: .center)
                 }
             }

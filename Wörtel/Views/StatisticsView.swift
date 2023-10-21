@@ -94,7 +94,7 @@ class StatisticsDataModel: ObservableObject {
 }
 
 struct StatisticsView: View {
-    @ObservedObject var vm: WordleViewModel
+    @ObservedObject var vm: WoertelViewModel
 
     @StateObject var statisticsDataModel = StatisticsDataModel()
 
@@ -156,7 +156,7 @@ struct StatisticsView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
 //            Rectangle().fill(.white)
-            StatisticsView(vm: WordleViewModel())
+            StatisticsView(vm: WoertelViewModel())
         }
     }
 }

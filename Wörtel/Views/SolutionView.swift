@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SolutionView : View {
-    @ObservedObject var vm: WordleViewModel
+    @ObservedObject var vm: WoertelViewModel
     let text: String
     let show: Bool
     var body: some View {
@@ -29,6 +29,6 @@ struct SolutionView : View {
 
 struct SolutionView_Previews: PreviewProvider {
     static var previews: some View {
-        SolutionView(vm: WordleViewModel(), text: "Adler", show: true)
+        SolutionView(vm: WoertelViewModel(), text: "Adler", show: true)
     }
 }

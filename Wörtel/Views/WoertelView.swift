@@ -1,5 +1,5 @@
 //
-//  WordleView.swift
+//  WoertelView.swift
 //  Wordle MVVM
 //
 //  Created by Holger Becker on 21.09.23.
@@ -8,8 +8,8 @@
 import SwiftUI
 import GameKit
 
-struct WordleView: View {
-    @ObservedObject var vm: WordleViewModel
+struct WoertelView: View {
+    @ObservedObject var vm: WoertelViewModel
     @State var cheating = false
     @State var showLeaderboard = false
 
@@ -94,7 +94,7 @@ struct WordleView: View {
                     .offset(x: 0, y: offset)
                     .opacity(offset != 0 ? 0 : 1)
                     .onAppear {
-                        withAnimation(.easeIn(duration: WordleViewModel.Constants.ShowNotInListTime)) {
+                        withAnimation(.easeIn(duration: WoertelViewModel.Constants.ShowNotInListTime)) {
                             offset = -200
                         }
                     }
@@ -117,6 +117,6 @@ struct WordleView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        WordleView(vm: WordleViewModel())
+        WoertelView(vm: WoertelViewModel())
     }
 }

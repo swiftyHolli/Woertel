@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct KeyboardLetter: View {
-    @ObservedObject var vm: WordleViewModel
-    var letter: WordleModel.WordleLetter
+    @ObservedObject var vm: WoertelViewModel
+    var letter: WoertelModel.WordleLetter
     let width = min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) / 12
     var body: some View {
         Button {
@@ -43,7 +43,7 @@ struct KeyboardLetter: View {
 
 
 struct KeyboardView: View {
-    @ObservedObject var vm: WordleViewModel
+    @ObservedObject var vm: WoertelViewModel
     @State var showingAlert = false
     
     let backgroundColor = Color(uiColor: #colorLiteral(red: 0.8374180198, green: 0.8374378085, blue: 0.8374271393, alpha: 1))
@@ -149,7 +149,7 @@ struct KeyboardView_Previews: PreviewProvider {
         VStack {
             Text("Hallo")
             Spacer()
-            KeyboardView(vm: WordleViewModel())
+            KeyboardView(vm: WoertelViewModel())
         }
     }
 }
