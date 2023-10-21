@@ -54,6 +54,7 @@
 		3084A1DB2AC36C4900DC8BF9 /* WordleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordleModel.swift; sourceTree = "<group>"; };
 		3084A1DD2AC36D2600DC8BF9 /* Effects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effects.swift; sourceTree = "<group>"; };
 		3084A1DF2AC377EF00DC8BF9 /* LetterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterView.swift; sourceTree = "<group>"; };
+		30900D202ADB2689009CBA2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		30C10E252AD74A6800C7A08E /* GameCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterView.swift; sourceTree = "<group>"; };
 		30C10E292AD7EA7E00C7A08E /* GameCenterIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterIcon.swift; sourceTree = "<group>"; };
 		30C10E2B2AD839B400C7A08E /* FlyingScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyingScore.swift; sourceTree = "<group>"; };
@@ -108,6 +109,7 @@
 		30415B4A2AACC318009956DD /* Wordle */ = {
 			isa = PBXGroup;
 			children = (
+				30900D202ADB2689009CBA2A /* Info.plist */,
 				30DCBB3F2AD2031D00E7D53F /* Wordle.entitlements */,
 				3084A1CF2AC36AE500DC8BF9 /* WordleApp.swift */,
 				30C10E2D2AD95B3900C7A08E /* Views */,
@@ -381,6 +383,7 @@
 				DEVELOPMENT_TEAM = L7L7CGJTMH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Wordle/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -415,6 +418,7 @@
 				DEVELOPMENT_TEAM = L7L7CGJTMH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Wordle/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

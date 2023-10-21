@@ -73,7 +73,6 @@ struct LetterView_Previews: PreviewProvider {
     static var previews: some View {
         let vm = WordleViewModel()
         let framesize:CGFloat = 200
-        let letter = WordleModel.WordleLetter(letter: "L", id: 5, isSelected: false, isDisabled: false, isChecked: true, rightPlace: false, rightLetter: false, wrongLetter: true, shake: false)
         ZStack {
             VStack(spacing: framesize / 30) {
                 HStack(spacing: framesize/30) {
